@@ -1,0 +1,39 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Investor extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'title',
+        'first_name',
+        'last_name',
+        'full_name',
+        'email',
+        'nic',
+        'contact_no',
+        'address_line_1',
+        'address_line_2',
+        'address_line_3',
+        'beneficiary_full_name',
+        'beneficiary_nic',
+        'beneficiary_contact_no',
+        'beneficiary_relation',
+        'registration_date',
+        'last_updated_date_time',
+        'last_updated_by',
+        'created_by',
+        'tax_status',
+        'tax_no',
+        'otp',
+        'status',
+    ];
+
+
+    
+}
