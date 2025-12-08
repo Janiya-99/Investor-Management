@@ -73,13 +73,13 @@
                                     <div class="mb-3 form-group">
                                         <label class="form-label">Full Name:</label>
                                         <input type="text" class="form-control" placeholder="Enter full name"
-                                            name="name">
+                                            name="name" id="fullName">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="mb-3 form-group">
                                         <label class="form-label">Email:</label>
-                                        <input type="email" class="form-control" placeholder="Enter email" name="email">
+                                        <input type="email" class="form-control" placeholder="Enter email" name="email" id="email">
                                     </div>
                                 </div>
                             </div>
@@ -88,13 +88,13 @@
                                 <div class="col-lg-6">
                                     <div class="mb-3 form-group">
                                         <label class="form-label">NIC:</label>
-                                        <input type="text" class="form-control" placeholder="Enter NIC" name="nic">
+                                        <input type="text" class="form-control" placeholder="Enter NIC" name="nic" id="nic">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="mb-3 form-group">
                                         <label class="form-label">Profile Picture:</label>
-                                        <input type="file" class="form-control" name="profile_photo">
+                                        <input type="file" class="form-control" name="profile_photo" id="profilePhoto">
                                     </div>
                                 </div>
                             </div>
@@ -126,9 +126,9 @@
                             </div>
                             <div class="mb-3">
                                 <div class="form-check form-switch custom-switch-v1 form-check-inline">
-                                    <input type="checkbox" class="form-check-input input-primary" id="customCheckinl1" name="status"
-                                        checked value="1">
-                                    <label class="form-check-label" for="customCheckinl1">Active</label>
+                                    <input type="checkbox" class="form-check-input input-primary" id="status"
+                                        name="status" checked value="1">
+                                    <label class="form-check-label" for="status">Active</label>
                                 </div>
                             </div>
                         </form>
@@ -213,189 +213,6 @@
     </script>
     <!-- [Page Specific JS] end --> --}}
     <script>
-        function resetFormAndErrors(modalId, saveBtnId) {
-            $('#submitForm')[0].reset();
-            $('#submitForm').find('.is-invalid').removeClass('is-invalid');
-            $('#submitForm').find('.invalid-feedback').remove();
-            $(saveBtnId).removeClass('btn-success').text('Add');
-            $(modalId).modal('hide');
-            $(modalId).modal('show');
-            $('.modal-title').removeClass('modelTitle');
-        }
-
-        $(document).on('click', '.add-new', function(e) {
-
-            let modal = $('#varyingcontentModalLabel');
-            let currentText = modal.text();
-
-            if (currentText.includes('Edit')) {
-                modal.text(currentText.replace('Edit', 'Create'));
-            }
-            if (currentText.includes('Show')) {
-                modal.text(currentText.replace('Show', 'Create'));
-            }
-            $('#submitForm')[0].reset();
-            $('#submitForm').find('.is-invalid').removeClass('is-invalid');
-            $('#submitForm').find('.invalid-feedback').remove();
-            $('.modal-footer').show();
-            resetFormAndErrors('.createModel', '.save-button');
-        });
-
-        $('.btn-close').click(function() {
-            resetFormAndErrors('.createModel', '.save-button');
-        });
-
-        $("#submitFormBtn").click(function() {
-
-            $('.spinner-border').show();
-            $('#submitFormBtn').hide();
-            // Clear previous error messages and styling
-            // $('.text-danger').remove();
-            $('.is-invalid').removeClass('is-invalid');
-            $('.invalid-feedback').remove();
-
-            // Get the native DOM element using document.getElementById
-            var formData = new FormData(document.getElementById('submitForm'));
-
-            $.ajax({
-                type: 'POST',
-                url: $('#submitForm').attr('action'),
-                data: formData,
-                dataType: 'json',
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    if (response.cashier_closed) {
-                        Swal.fire({
-                            html: '<div class="mt-3">' +
-                                '<lord-icon src="https://cdn.lordicon.com/lupuorrc.json" ' +
-                                'trigger="loop" colors="primary:#0ab39c,secondary:#405189" style="width:120px;height:120px">' +
-                                '</lord-icon>' + '<div class="mt-4 pt-2 fs-15">' +
-                                '<h4>Well done !</h4>' +
-                                '<p class="text-muted mx-4 mb-0">' + response.message +
-                                '!</p>' +
-                                '</div>' +
-                                '</div>',
-                            showCancelButton: true,
-                            showConfirmButton: false,
-                            cancelButtonClass: 'btn btn-primary w-xs mb-1',
-                            cancelButtonText: 'OK',
-                            buttonsStyling: false,
-                            showCloseButton: true
-                        }).then(() => {
-                            $('.spinner-border').hide();
-                            window.location.href = response.next_path;
-                        });
-                    } else if (response.next) {
-                        Swal.fire({
-                            html: '<div class="mt-3">' +
-                                '<lord-icon src="https://cdn.lordicon.com/lupuorrc.json" ' +
-                                'trigger="loop" colors="primary:#0ab39c,secondary:#405189" style="width:120px;height:120px">' +
-                                '</lord-icon>' + '<div class="mt-4 pt-2 fs-15">' +
-                                '<h4>Well done !</h4>' +
-                                '<p class="text-muted mx-4 mb-0">' + response.message +
-                                '!</p>' +
-                                '</div>' +
-                                '</div>',
-                            showCancelButton: true,
-                            showConfirmButton: false,
-                            cancelButtonClass: 'btn btn-primary w-xs mb-1',
-                            cancelButtonText: 'OK',
-                            buttonsStyling: false,
-                            showCloseButton: true,
-                            footer: '<a href="' + response.next_path + '?' + response
-                                .next_param_name + '=' + response.next_param_value + '" ' +
-                                response.next_attribute + '="' + response.next_value +
-                                '">Next Process - ' + response.next_process_name + '</a>'
-                        }).then(() => {
-                            $('.spinner-border').hide();
-                            location.reload();
-                        });
-
-                    } else {
-                        Swal.fire({
-                            html: '<div class="mt-3">' +
-                                '<lord-icon src="https://cdn.lordicon.com/lupuorrc.json" ' +
-                                'trigger="loop" colors="primary:#0ab39c,secondary:#405189" style="width:120px;height:120px">' +
-                                '</lord-icon>' + '<div class="mt-4 pt-2 fs-15">' +
-                                '<h4>Well done !</h4>' +
-                                '<p class="text-muted mx-4 mb-0">' + response.message +
-                                '!</p>' +
-                                '</div>' +
-                                '</div>',
-                            showCancelButton: true,
-                            showConfirmButton: false,
-                            cancelButtonClass: 'btn btn-primary w-xs mb-1',
-                            cancelButtonText: 'OK',
-                            buttonsStyling: false,
-                            showCloseButton: true
-                        }).then(() => {
-                            $('.spinner-border').hide();
-                            location.reload();
-                        });
-                    }
-
-                },
-                error: function(xhr, status, error) {
-                    $('.spinner-border').hide();
-                    $('#submitFormBtn').show();
-                    if (xhr.status === 422) {
-                        // Handle validation errors
-                        var errors = xhr.responseJSON.errors;
-                        if (errors) {
-                            $.each(errors, function(key, value) {
-                                // Check if the key is an array field
-                                if (key.includes('.')) {
-                                    var parts = key.split('.');
-                                    var fieldName = parts[0] + '[]';
-                                    var index = parts[1];
-
-                                    console.log(fieldName);
-
-                                    var inputField = $('[name="' + fieldName + '"]').eq(
-                                        index);
-                                    inputField.addClass('is-invalid');
-                                    inputField.closest('.form-group').append(
-                                        '<div class="invalid-feedback">' + value[0] +
-                                        '</div>'
-                                    );
-                                } else {
-                                    // For non-array fields
-                                    var inputField = $('[name="' + key + '"]');
-                                    inputField.addClass('is-invalid');
-                                    inputField.closest('.form-group').append(
-                                        '<div class="invalid-feedback">' + value[0] +
-                                        '</div>'
-                                    );
-                                }
-                            });
-                        }
-                    } else if (xhr.status === 500) {
-                        var errorMessage = xhr.responseJSON
-                            .message; // Assuming the server sends an error message in the response
-                        Swal.fire({
-                            html: '<div class="mt-3">' +
-                                '<lord-icon src="https://cdn.lordicon.com/tdrtiskw.json" ' +
-                                'trigger="loop" colors="primary:#f06548,secondary:#f7b84b" style="width:120px;height:120px">' +
-                                '</lord-icon>' + '<div class="mt-4 pt-2 fs-15">' + '<h4>' +
-                                errorMessage + ' !</h4>' + '</div>' + '</div>',
-                            showCancelButton: true,
-                            showConfirmButton: false,
-                            cancelButtonClass: 'btn btn-primary',
-                            cancelButtonText: 'Dismiss',
-                            buttonsStyling: false,
-                            showCloseButton: true
-                        }).then(() => {
-                            // location.reload();
-                        });
-                    }
-                },
-                complete: function() {
-
-                }
-            });
-        });
-
         $(document).ready(function() {
             var table = $('.data-table').DataTable({
                 dom: '<"top"lBf>rt<"bottom"ip><"clear">',
@@ -436,6 +253,40 @@
                         searchable: false
                     },
                 ],
+            });
+        });
+
+        $(document).on('click', '.btn-edit', function() {
+          
+            var userId = $(this).data('id');
+
+            // Fetch user data via AJAX
+            $.ajax({
+                url: '/users/' + userId + '/edit',
+                type: 'GET',
+                success: function(response) {
+                  
+                    // Populate the form fields with the fetched data
+                    $('#userModalTitle').text('Edit User');
+                    $('#fullName').val(response.data.name);
+                    $('#email').val(response.data.email);
+                    $('#nic').val(response.data.nic);
+
+                    if(response.data.status == 1){
+                        $('#status').prop('checked', true);
+                    }else{
+                        $('#status').prop('checked', false);
+                    }
+
+                    $('#submitForm').attr('action', '/users/' + userId);
+                    $('#submitForm').append('<input type="hidden" name="_method" value="PUT">');
+
+                    // Show the modal
+                    $('#varyingcontentModalLabel').modal('show');
+                },
+                error: function(xhr) {
+                    console.log(xhr.responseText);
+                }
             });
         });
     </script>

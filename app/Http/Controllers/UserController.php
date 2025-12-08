@@ -30,15 +30,12 @@ class UserController extends Controller
 
                         $loggedInUserId = Auth::id();
                         // if (auth()->user()->can('admin-common-user-view')) {
-                        $buttons .= ' <button data-bs-toggle="modal" data-bs-target="#varyingcontentModal" class="btn btn-info btn-sm btn-show btnView m-1" data-data=\'' . json_encode($data) . '\'><i class="ri ri-newspaper-fill"></i></button>';
-                        // }
-                        // if (auth()->user()->can('admin-common-user-update')) {
-                        $buttons .= ' <button data-bs-toggle="modal" data-bs-target="#varyingcontentModal" class="btn btn-warning btn-sm btn-edit btnEdit" data-data=\'' . json_encode($data) . '\'><i class="ri ri-edit-2-fill"></i></button>';
+                        $buttons .= ' <button data-bs-toggle="modal" data-bs-target="#varyingcontentModalLabel" class="btn btn-info btn-sm btn-edit m-1" data-id="' . $data->id . '" ><i class="ti ti-pencil f-18"></i></button>';
                         // }
                         // if (auth()->user()->can('admin-common-user-delete')) {
-                        //     if ($data->id !== $loggedInUserId) {
-                        //         $buttons .= '<button class="btn btn-danger btn-sm btn-delete m-1" onclick="handleDelete(\'' . route('admin.users.destroy', $data['id']) . '\', { _token: \'' . csrf_token() . '\' })"><i class="ri ri-delete-bin-line"></i></button>';
-                        //     }
+                            if ($data->id !== $loggedInUserId) {
+                                $buttons .= '<button class="btn btn-danger btn-sm btn-delete m-1" onclick="handleDelete(\'' . route('users.destroy', $data['id']) . '\', { _token: \'' . csrf_token() . '\' })"><i class="ti ti-trash f-18"></i></button>';
+                            }
                         // }
                         return $buttons;
                     })
@@ -95,7 +92,13 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        try {
+            //code...
+            $user = User::findOrFail($id);
+            return response()->json(['data' => $user, 'status' => true], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage(), 'status' => false], 500);
+        }
     }
 
     /**
@@ -112,11 +115,13 @@ class UserController extends Controller
                 $fileData = base64_encode(file_get_contents($file->getRealPath()));
                 $data['profile_photo'] = 'data:' . $file->getMimeType() . ';base64,' . $fileData;
             }
+
             if (!empty($data['password'])) {
                 $data['password'] = Hash::make($data['password']);
             } else {
                 unset($data['password']);
             }
+            
             $user->update($data);
             return response()->json(['message' => 'User updated successfully', 'status' => true], 200);
         } catch (\Throwable $th) {
@@ -130,6 +135,13 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            //code...
+            $user = User::findOrFail($id);
+            $user->delete();
+            return response()->json(['message' => 'User deleted successfully', 'status' => true], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage(), 'status' => false], 500);
+        }
     }
 }
