@@ -1,25 +1,37 @@
 <!-- Required Js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="{{ URL::asset('build/js/plugins/dataTables.min.js') }}"></script>
+<script src="{{ URL::asset('build/js/plugins/dataTables.bootstrap5.min.js') }}"></script>
+<script src="{{ URL::asset('build/js/plugins/buttons.colVis.min.js') }}"></script>
+<script src="{{ URL::asset('build/js/plugins/buttons.print.min.js') }}"></script>
+<script src="{{ URL::asset('build/js/plugins/pdfmake.min.js') }}"></script>
+<script src="{{ URL::asset('build/js/plugins/jszip.min.js') }}"></script>
+<script src="{{ URL::asset('build/js/plugins/dataTables.buttons.min.js') }}"></script>
+<script src="{{ URL::asset('build/js/plugins/vfs_fonts.js') }}"></script>
+<script src="{{ URL::asset('build/js/plugins/buttons.html5.min.js') }}"></script>
+<script src="{{ URL::asset('build/js/plugins/buttons.bootstrap5.min.js') }}"></script>
 <script src="{{ URL::asset('build/js/plugins/popper.min.js') }}"></script>
 <script src="{{ URL::asset('build/js/plugins/simplebar.min.js') }}"></script>
 <script src="{{ URL::asset('build/js/plugins/bootstrap.min.js') }}"></script>
+
 <script src="{{ URL::asset('build/js/fonts/custom-font.js') }}"></script>
 <script src="{{ URL::asset('build/js/pcoded.js') }}"></script>
 <script src="{{ URL::asset('build/js/plugins/feather.min.js') }}"></script>
 
 @if (env('APP_DARK_LAYOUT') == 'default')
-<script>
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        dark_layout = 'true';
-    } else {
-        dark_layout = 'false';
-    }
-    layout_change_default();
-    if (dark_layout == 'true') {
-        layout_change('dark');
-    } else {
-        layout_change('light');
-    }
-</script>
+    <script>
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            dark_layout = 'true';
+        } else {
+            dark_layout = 'false';
+        }
+        layout_change_default();
+        if (dark_layout == 'true') {
+            layout_change('dark');
+        } else {
+            layout_change('light');
+        }
+    </script>
 @endif
 
 @if (env('APP_DARK_LAYOUT') != 'default')
@@ -86,6 +98,6 @@
 
 @if (env('APP_PRESET_THEME') != '')
     <script>
-        preset_change("{{env('APP_PRESET_THEME')}}");
+        preset_change("{{ env('APP_PRESET_THEME') }}");
     </script>
 @endif
