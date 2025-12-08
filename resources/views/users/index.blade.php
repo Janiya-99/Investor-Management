@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{{ URL::asset('build/css/plugins/dataTables.bootstrap5.min.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('build/css/plugins/buttons.bootstrap5.min.css') }}">
     <!-- [Page specific CSS] end -->
+
 @endsection
 
 @section('content')
@@ -148,70 +149,7 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <!-- Include SweetAlert from CDN -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.all.min.js" aria-hidden="true"></script>
-    <!-- [Page Specific JS] start -->
-    <!-- datatable Js -->
-
-    {{-- <script>
-        // [ HTML5 Export Buttons ]
-        $('#basic-btn').DataTable({
-            dom: 'Bfrtip',
-            buttons: ['copy', 'csv', 'excel', 'print']
-        });
-
-        // [ Column Selectors ]
-        $('#cbtn-selectors').DataTable({
-            dom: 'Bfrtip',
-            buttons: [{
-                    extend: 'copyHtml5',
-                    exportOptions: {
-                        columns: [0, ':visible']
-                    }
-                },
-                {
-                    extend: 'excelHtml5',
-                    exportOptions: {
-                        columns: ':visible'
-                    }
-                },
-                {
-                    extend: 'pdfHtml5',
-                    exportOptions: {
-                        columns: [0, 1, 2, 5]
-                    }
-                },
-                'colvis'
-            ]
-        });
-
-        // [ Excel - Cell Background ]
-        $('#excel-bg').DataTable({
-            dom: 'Bfrtip',
-            buttons: [{
-                extend: 'excelHtml5',
-                customize: function(xlsx) {
-                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                    $('row c[r^="F"]', sheet).each(function() {
-                        if ($('is t', this).text().replace(/[^\d]/g, '') * 1 >= 500000) {
-                            $(this).attr('s', '20');
-                        }
-                    });
-                }
-            }]
-        });
-
-        // [ Custom File (JSON) ]
-        $('#pdf-json').DataTable({
-            dom: 'Bfrtip',
-            buttons: [{
-                text: 'JSON',
-                action: function(e, dt, button, config) {
-                    var data = dt.buttons.exportData();
-                    $.fn.dataTable.fileSave(new Blob([JSON.stringify(data)]), 'Export.json');
-                }
-            }]
-        });
-    </script>
-    <!-- [Page Specific JS] end --> --}}
+  
     <script>
         $(document).ready(function() {
             var table = $('.data-table').DataTable({
@@ -257,7 +195,7 @@
         });
 
         $(document).on('click', '.btn-edit', function() {
-          
+
             var userId = $(this).data('id');
 
             // Fetch user data via AJAX

@@ -121,7 +121,7 @@ class UserController extends Controller
             } else {
                 unset($data['password']);
             }
-            
+
             $user->update($data);
             return response()->json(['message' => 'User updated successfully', 'status' => true], 200);
         } catch (\Throwable $th) {
@@ -139,6 +139,7 @@ class UserController extends Controller
             //code...
             $user = User::findOrFail($id);
             $user->delete();
+            
             return response()->json(['message' => 'User deleted successfully', 'status' => true], 200);
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage(), 'status' => false], 500);
