@@ -25,4 +25,11 @@
       </span>
       <span class="pc-mtext">Users</span>
     </a>
+  <li class="pc-item">
+    <a href="{{route('investors.index')}}" class="pc-link">
+      <span class="pc-micon">
+        <i class="ph-duotone ph-users-three"></i>
+      </span>
+      <span class="pc-mtext">Investors</span>
+    </a>
   </li>

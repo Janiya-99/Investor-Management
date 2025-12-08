@@ -13,7 +13,7 @@ class InvestorController extends Controller
      */
     public function index()
     {
-        //
+        return view('investors.index');
     }
 
     /**

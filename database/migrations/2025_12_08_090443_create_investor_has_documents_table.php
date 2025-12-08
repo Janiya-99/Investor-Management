@@ -19,7 +19,7 @@ return new class extends Migration
             $table->timestamp('uploaded_at')->useCurrent();
             $table->foreignId('uploaded_by')->constrained('users');
             $table->string('file_path');
-$            $table->timestamps();
+            $$table->timestamps();
         });
     }
 

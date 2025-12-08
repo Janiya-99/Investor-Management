@@ -23,11 +23,11 @@ class StoreInvestorRequest extends FormRequest
     {
         return [
 
-            'title' => 'nullable|string|max:50',
+            'title' => 'required|string|max:50',
 
-            'first_name' => 'nullable|string|max:255',
-            'last_name' => 'nullable|string|max:255',
-            'full_name' => 'nullable|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'full_name' => 'required|string|max:255',
 
             'email' => 'required|email|max:255|unique:investors,email,' . $this->investor,
 
