@@ -69,29 +69,35 @@
                     <div class="card-body">
                         <form id="submitForm" action="{{ route('users.store') }}" method="POST">
                             @csrf
+
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="mb-3 form-group">
-                                        <label class="form-label">Full Name:</label>
+                                        <label class="form-label">Full Name: <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" placeholder="Enter full name"
-                                            name="name" id="fullName">
+                                            name="name" id="fullName" required>
                                     </div>
                                 </div>
+
                                 <div class="col-lg-6">
                                     <div class="mb-3 form-group">
-                                        <label class="form-label">Email:</label>
-                                        <input type="email" class="form-control" placeholder="Enter email" name="email" id="email">
+                                        <label class="form-label">Email: <span class="text-danger">*</span></label>
+                                        <input type="email" class="form-control" placeholder="Enter email" name="email"
+                                            id="email" required>
                                     </div>
                                 </div>
                             </div>
+
 
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="mb-3 form-group">
                                         <label class="form-label">NIC:</label>
-                                        <input type="text" class="form-control" placeholder="Enter NIC" name="nic" id="nic">
+                                        <input type="text" class="form-control" placeholder="Enter NIC" name="nic"
+                                            id="nic">
                                     </div>
                                 </div>
+
                                 <div class="col-lg-6">
                                     <div class="mb-3 form-group">
                                         <label class="form-label">Profile Picture:</label>
@@ -100,31 +106,38 @@
                                 </div>
                             </div>
 
+
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Password:</label>
+                                        <label class="form-label">Password: <span class="text-danger">*</span></label>
                                         <div class="input-group search-form form-group">
-                                            <input type="Password" class="form-control"
-                                                placeholder="Please enter your Password" name="password">
-                                            <span class="input-group-text bg-transparent"><i
-                                                    class="feather icon-lock"></i></span>
+                                            <input type="password" class="form-control"
+                                                placeholder="Please enter your Password" name="password" required>
+                                            <span class="input-group-text bg-transparent">
+                                                <i class="feather icon-lock"></i>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Confirm Password:</label>
+                                        <label class="form-label">Confirm Password: <span
+                                                class="text-danger">*</span></label>
                                         <div class="input-group search-form form-group">
-                                            <input type="Password" class="form-control"
+                                            <input type="password" class="form-control"
                                                 placeholder="Please enter your Confirm Password"
-                                                name="password_confirmation">
-                                            <span class="input-group-text bg-transparent"><i
-                                                    class="feather icon-lock"></i></span>
+                                                name="password_confirmation" required>
+                                            <span class="input-group-text bg-transparent">
+                                                <i class="feather icon-lock"></i>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
+
                             <div class="mb-3">
                                 <div class="form-check form-switch custom-switch-v1 form-check-inline">
                                     <input type="checkbox" class="form-check-input input-primary" id="status"
@@ -132,7 +145,9 @@
                                     <label class="form-check-label" for="status">Active</label>
                                 </div>
                             </div>
+
                         </form>
+
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -149,7 +164,7 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <!-- Include SweetAlert from CDN -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.all.min.js" aria-hidden="true"></script>
-  
+
     <script>
         $(document).ready(function() {
             var table = $('.data-table').DataTable({
@@ -203,16 +218,16 @@
                 url: '/users/' + userId + '/edit',
                 type: 'GET',
                 success: function(response) {
-                  
+
                     // Populate the form fields with the fetched data
                     $('#userModalTitle').text('Edit User');
                     $('#fullName').val(response.data.name);
                     $('#email').val(response.data.email);
                     $('#nic').val(response.data.nic);
 
-                    if(response.data.status == 1){
+                    if (response.data.status == 1) {
                         $('#status').prop('checked', true);
-                    }else{
+                    } else {
                         $('#status').prop('checked', false);
                     }
 

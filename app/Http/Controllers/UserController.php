@@ -8,7 +8,6 @@ use Yajra\DataTables\DataTables;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Testing\Fluent\Concerns\Has;
 
 class UserController extends Controller
 {

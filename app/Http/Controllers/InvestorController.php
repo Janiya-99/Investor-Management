@@ -12,7 +12,6 @@ class InvestorController extends Controller
      */
     public function index()
     {
-        return view('investors.index');
     }
 
     /**
@@ -20,7 +19,7 @@ class InvestorController extends Controller
      */
     public function create()
     {
-        //
+        return view('investors.index');
     }
 
     /**

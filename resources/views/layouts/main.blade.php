@@ -18,14 +18,7 @@
 
         @include('layouts.head-css')
 
-        <style>
-            body {
-                /* transform: scale(0.75); */
-                /* transform-origin: top left; */
-                /* width: 133.33%; */
-                /* 100 / 0.75 = 133.33 */
-            }
-        </style>
+        
     </head>
 
     <body data-pc-preset="preset-1" data-pc-sidebar-theme="dark" data-pc-sidebar-caption="true" data-pc-direction="ltr"
