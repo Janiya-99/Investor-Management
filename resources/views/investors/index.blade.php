@@ -15,245 +15,311 @@
 @endsection
 
 @section('content')
-    <!-- [ Main Content ] start -->
     <div class="row">
-        <!-- HTML5 Export Buttons table start -->
-        <div class="col-sm-12">
+
+        <!-- Sticky Header -->
+        <div id="sticky-action" class="sticky-action mb-3">
             <div class="card">
-                <div class="card-header table-card-header text-end">
-                    <button type="button" class="btn btn-primary add-new" data-bs-toggle="modal"
-                        data-bs-target="#varyingcontentModalLabel">Add
-                        Investor</button>
-                </div>
-                <div class="card-body">
-                    <div class="dt-responsive table-responsive">
-                        <table id="basic-btn" class="table table-striped table-bordered nowrap data-table">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Full Name</th>
-                                    <th>Email</th>
-                                    <th>NIC</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                            <tfoot>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Full Name</th>
-                                    <th>Email</th>
-                                    <th>NIC</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
-                            </tfoot>
-                        </table>
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col-sm-6">
+                            <h4>Investor Information</h4>
+                        </div>
+                        <div class="col-sm-6 text-sm-end">
+                            <button type="reset" class="btn btn-success">Submit</button>
+                            <button type="reset" class="btn btn-light-secondary">Cancel</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- [ Main Content ] end -->
 
-    <div id="varyingcontentModalLabel" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="investorModalTitle"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="investorModalTitle">Create Investor</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
+        <form>
+
+            <!-- Investor Information -->
+            <div class="col-12 mb-3">
+                <div class="card">
+
                     <div class="card-body">
-                        <form id="submitForm" action="{{ route('investors.store') }}" method="POST"
-                            enctype="multipart/form-data">
-                            @csrf
+                        <div class="row">
 
-                            <!-- PERSONAL DETAILS -->
-                            <fieldset class="border p-3 mb-3">
-                                <legend class="float-none w-auto px-2">Personal Details</legend>
+                            <div class="mb-3 col-md-2">
+                                <label class="form-label">Title</label>
+                                <select name="title" id="title" class="form-select">
+                                    <option value="">Select Title</option>
+                                    <option value="Mr">Mr</option>
+                                    <option value="Mrs">Mrs</option>
+                                    <option value="Ms">Ms</option>
+                                    <option value="Miss">Miss</option>
+                                    <option value="Dr">Dr</option>
+                                    <option value="Prof">Prof</option>
+                                    <option value="Rev">Rev</option>
+                                    <option value="Hon">Hon</option>
+                                    <option value="Sir">Sir</option>
+                                    <option value="Madam">Madam</option>
+                                    <option value="Mx">Mx</option>
+                                    <option value="Eng">Eng</option>
+                                    <option value="Capt">Capt</option>
+                                    <option value="Lt">Lt</option>
+                                    <option value="Col">Col</option>
+                                    <option value="Gen">Gen</option>
+                                </select>
+                            </div>
 
-                                <div class="row">
-                                    <div class="col-lg-3">
-                                        <div class="mb-3 form-group">
-                                            <label class="form-label">Title:</label>
-                                           <select name="title" id="title" class="form-select">
-                                               <option value="">Select Title</option>
-                                               <option value="Mr">Mr</option>
-                                               <option value="Mrs">Mrs</option>
-                                               <option value="Miss">Miss</option>
-                                           </select>
-                                        </div>
-                                    </div>
+                            <div class="mb-3 col-md-5">
+                                <label class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="first_name" name="first_name"
+                                    placeholder="Enter First Name">
+                            </div>
 
-                                    <div class="col-lg-4">
-                                        <div class="mb-3 form-group">
-                                            <label class="form-label">First Name:</label>
-                                            <input type="text" name="first_name" class="form-control"
-                                                placeholder="Enter first name">
-                                        </div>
-                                    </div>
+                            <div class="mb-3 col-md-5">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="last_name" name="last_name"
+                                    placeholder="Enter Last Name">
+                            </div>
 
-                                    <div class="col-lg-4">
-                                        <div class="mb-3 form-group">
-                                            <label class="form-label">Last Name:</label>
-                                            <input type="text" name="last_name" class="form-control"
-                                                placeholder="Enter last name">
-                                        </div>
-                                    </div>
+                            <div class="mb-3 col-md-6">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="full_name" name="full_name"
+                                    placeholder="Enter Full Name">
+                            </div>
 
-                                    <div class="col-lg-6">
-                                        <div class="mb-3 form-group">
-                                            <label class="form-label">Full Name:</label>
-                                            <input type="text" name="full_name" class="form-control"
-                                                placeholder="Enter full name">
-                                        </div>
-                                    </div>
+                            <div class="mb-3 col-md-6">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email"
+                                    placeholder="Enter Email">
+                            </div>
 
-                                    <div class="col-lg-6">
-                                        <div class="mb-3 form-group">
-                                            <label class="form-label">Email:</label>
-                                            <input type="email" name="email" class="form-control"
-                                                placeholder="Enter email">
-                                        </div>
-                                    </div>
+                            <div class="mb-3 col-md-4">
+                                <label class="form-label">NIC</label>
+                                <input type="text" class="form-control" id="nic" name="nic"
+                                    placeholder="Enter NIC">
+                            </div>
 
-                                    <div class="col-lg-4">
-                                        <div class="mb-3 form-group">
-                                            <label class="form-label">NIC:</label>
-                                            <input type="text" name="nic" class="form-control"
-                                                placeholder="Enter NIC">
-                                        </div>
-                                    </div>
+                            <div class="mb-3 col-md-4">
+                                <label class="form-label">Contact No</label>
+                                <input type="text" class="form-control" id="contact_no" name="contact_no"
+                                    placeholder="Enter Contact No">
+                            </div>
 
-                                    <div class="col-lg-4">
-                                        <div class="mb-3 form-group">
-                                            <label class="form-label">Contact No:</label>
-                                            <input type="text" name="contact_no" class="form-control"
-                                                placeholder="Enter contact number">
-                                        </div>
-                                    </div>
+                            <div class="mb-3 col-md-4">
+                                <label class="form-label">Address Line 1</label>
+                                <input type="text" class="form-control" id="address_line_1" name="address_line_1"
+                                    placeholder="Enter Address Line 1">
+                            </div>
 
-                                    <div class="col-lg-4">
-                                        <div class="mb-3">
-                                            <label class="form-label">Profile Photo:</label>
-                                            <input type="file" name="profile_photo" class="form-control">
-                                        </div>
-                                    </div>
-                                </div>
-                            </fieldset>
+                            <div class="mb-3 col-md-4">
+                                <label class="form-label">Address Line 2</label>
+                                <input type="text" class="form-control" id="address_line_2" name="address_line_2"
+                                    placeholder="Enter Address Line 2">
+                            </div>
 
-                            <!-- ADDRESS DETAILS -->
-                            <fieldset class="border p-3 mb-3">
-                                <legend class="float-none w-auto px-2">Address Details</legend>
+                            <div class="mb-3 col-md-4">
+                                <label class="form-label">Address Line 3</label>
+                                <input type="text" class="form-control" id="address_line_3" name="address_line_3"
+                                    placeholder="Enter Address Line 3">
+                            </div>
 
-                                <div class="mb-3 form-group">
-                                    <label class="form-label">Address Line 1:</label>
-                                    <textarea name="address_line_1" class="form-control" rows="2"></textarea>
-                                </div>
-
-                                <div class="mb-3 form-group">
-                                    <label class="form-label">Address Line 2:</label>
-                                    <textarea name="address_line_2" class="form-control" rows="2"></textarea>
-                                </div>
-
-                                <div class="mb-3 form-group">
-                                    <label class="form-label">Address Line 3:</label>
-                                    <textarea name="address_line_3" class="form-control" rows="2"></textarea>
-                                </div>
-                            </fieldset>
-
-                            <!-- BENEFICIARY DETAILS -->
-                            <fieldset class="border p-3 mb-3">
-                                <legend class="float-none w-auto px-2">Beneficiary Details</legend>
-
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="mb-3 form-group">
-                                            <label class="form-label">Beneficiary Full Name:</label>
-                                            <input type="text" name="beneficiary_full_name" class="form-control"
-                                                placeholder="Enter full name">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-3">
-                                        <div class="mb-3 form-group">
-                                            <label class="form-label">Beneficiary NIC:</label>
-                                            <input type="text" name="beneficiary_nic" class="form-control"
-                                                placeholder="Enter NIC">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-3">
-                                        <div class="mb-3 form-group">
-                                            <label class="form-label">Beneficiary Contact No:</label>
-                                            <input type="text" name="beneficiary_contact_no" class="form-control"
-                                                placeholder="Enter contact no">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-4">
-                                        <div class="mb-3 form-group">
-                                            <label class="form-label">Relation:</label>
-                                            <input type="text" name="beneficiary_relation" class="form-control"
-                                                placeholder="e.g., Mother, Brother">
-                                        </div>
-                                    </div>
-                                </div>
-                            </fieldset>
-
-                            <!-- OTHER INFORMATION -->
-                            <fieldset class="border p-3 mb-3">
-                                <legend class="float-none w-auto px-2">Other Information</legend>
-
-                                <div class="row">
-                                    <div class="col-lg-4">
-                                        <div class="mb-3 form-group ">
-                                            <label class="form-label">Registration Date:</label>
-                                            <input type="date" name="registration_date" class="form-control">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-4">
-                                        <div class="mb-3 form-group ">
-                                            <label class="form-label">Tax Status:</label>
-                                            <input type="text" name="tax_status" class="form-control"
-                                                placeholder="Enter tax status">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-4">
-                                        <div class="mb-3 form-group ">
-                                            <label class="form-label">Tax No:</label>
-                                            <input type="text" name="tax_no" class="form-control"
-                                                placeholder="Enter tax number">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-4">
-                                        <div class="form-check form-switch mt-4">
-                                            <input type="checkbox" class="form-check-input" name="status"
-                                                value="1" checked>
-                                            <label class="form-check-label">Active</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </fieldset>
-
-                        </form>
+                        </div>
                     </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="submitFormBtn">Save Investor</button>
                 </div>
             </div>
-        </div>
+
+            <!-- Beneficiary Information -->
+            <div class="col-12 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Beneficiary Information</h5>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+
+                            <div class="mb-3 col-md-6">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="beneficiary_full_name"
+                                    name="beneficiary_full_name" placeholder="Enter Full Name">
+                            </div>
+
+                            <div class="mb-3 col-md-3">
+                                <label class="form-label">NIC</label>
+                                <input type="text" class="form-control" id="beneficiary_nic" name="beneficiary_nic"
+                                    placeholder="Enter NIC">
+                            </div>
+
+                            <div class="mb-3 col-md-3">
+                                <label class="form-label">Contact No</label>
+                                <input type="text" class="form-control" id="beneficiary_contact_no"
+                                    name="beneficiary_contact_no" placeholder="Enter Contact No">
+                            </div>
+
+                            <div class="mb-3 col-md-4">
+                                <label class="form-label">Relation</label>
+                                <input type="text" class="form-control" id="beneficiary_relation"
+                                    name="beneficiary_relation" placeholder="Enter Relation">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Registration & Tax -->
+            <div class="col-12 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Registration & Tax</h5>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+
+                            <div class="mb-3 col-md-4">
+                                <label class="form-label">Registration Date</label>
+                                <input type="date" class="form-control" id="registration_date"
+                                    name="registration_date">
+                            </div>
+
+                            <div class="mb-3 col-md-4">
+                                <label class="form-label">Tax Status</label>
+                                <input type="text" class="form-control" id="tax_status" name="tax_status"
+                                    placeholder="Enter Tax Status">
+                            </div>
+
+                            <div class="mb-3 col-md-4">
+                                <label class="form-label">Tax No</label>
+                                <input type="text" class="form-control" id="tax_no" name="tax_no"
+                                    placeholder="Enter Tax No">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Documents -->
+            <div class="col-12 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col-sm-6">
+                                <h5>Documents</h5>
+                            </div>
+                            <div class="col-sm-6 text-sm-end">
+                                <button type="button" class="btn btn-outline-primary text-end" id="addDocument">
+                                    + Add Document
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <div id="documentsWrapper">
+                            <div class="document-item border rounded p-3 mb-3">
+                                <div class="row align-items-end">
+
+                                    <!-- Description -->
+                                    <div class="mb-3 col-md-5">
+                                        <label class="form-label">Description</label>
+                                        <textarea class="form-control" id="documents_0_description" name="documents[0][description]"
+                                            placeholder="Enter description"></textarea>
+                                    </div>
+
+                                    <!-- Upload Document -->
+                                    <div class="mb-3 col-md-5">
+                                        <label class="form-label">Upload Document</label>
+                                        <input type="file" class="form-control" id="documents_0_document_path"
+                                            name="documents[0][document_path]">
+                                    </div>
+
+                                    <!-- Remove Button -->
+                                    <div class="mb-3 col-md-2 d-flex justify-content-end">
+                                        <button type="button" class="btn btn-danger remove-document mt-md-4 mt-2">
+                                            <i class="ph-duotone ph-minus-square"></i>
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bank Details -->
+            <div class="col-12 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col-sm-6">
+                                <h5>Bank Details</h5>
+                            </div>
+                            <div class="col-sm-6 text-sm-end">
+                                <button type="button" class="btn btn-outline-primary" id="addBank">
+                                    + Add Bank
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <div id="banksWrapper">
+
+                            <div class="bank-item border rounded p-3 mb-3">
+                                <div class="row align-items-end">
+
+                                    <!-- Bank -->
+                                    <div class="mb-3 col-md-3">
+                                        <label class="form-label">Bank</label>
+                                        <select class="form-select" id="banks_0_bank_id" name="banks[0][bank_id]">
+                                            <option>Select Bank</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Branch -->
+                                    <div class="mb-3 col-md-3">
+                                        <label class="form-label">Branch</label>
+                                        <select class="form-select" id="banks_0_bank_branch_id"
+                                            name="banks[0][bank_branch_id]">
+                                            <option>Select Branch</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Account Number -->
+                                    <div class="mb-3 col-md-3">
+                                        <label class="form-label">Account Number</label>
+                                        <input type="text" class="form-control" id="banks_0_account_number"
+                                            name="banks[0][account_number]" placeholder="Enter Account Number">
+                                    </div>
+
+                                    <!-- Remove Button -->
+                                    <div class="mb-3 col-md-3 d-flex justify-content-end">
+                                        <button type="button" class="btn btn-danger remove-bank mt-md-4 mt-2">
+                                             <i class="ph-duotone ph-minus-square"></i>
+                                        </button>
+                                    </div>
+
+                                    <!-- Account Name (full row) -->
+                                    <div class="mb-3 col-md-6">
+                                        <label class="form-label">Account Name</label>
+                                        <input type="text" class="form-control" id="banks_0_account_name"
+                                            name="banks[0][account_name]" placeholder="Enter Account Name">
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+
     </div>
 @endsection
+
 
 @section('scripts')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -263,78 +329,44 @@
 
     <script>
         $(document).ready(function() {
-            var table = $('.data-table').DataTable({
-                dom: '<"top"lBf>rt<"bottom"ip><"clear">',
-                buttons: [
-                    'copy', 'csv', 'excel', 'pdf', 'print'
-                ],
-                processing: true,
-                serverSide: true,
-                ajax: "{{ route('investors.index') }}",
-                columns: [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex'
-                    }, {
-                        data: 'name',
-                        name: 'name'
-                    }, {
-                        data: 'email',
-                        name: 'email'
-                    }, {
-                        data: 'nic',
-                        name: 'nic'
-                    }, {
-                        data: 'status',
-                        name: 'status',
-                        render: function(data) {
-                            if (data === 1) {
-                                return '<span class="badge bg-success">Active</span>';
-                            } else {
-                                return '<span class="badge bg-danger">Inactive</span>';
-                            }
-                        }
-                    },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        width: '120px',
-                        orderable: false,
-                        searchable: false
-                    },
-                ],
+            let docIndex = 1;
+            let bankIndex = 1;
+
+            // Add Document
+            $("#addDocument").click(function() {
+                let newDoc = $(".document-item:first").clone();
+                newDoc.find("input, textarea").each(function() {
+                    $(this).val("");
+                    let name = $(this).attr("name");
+                    $(this).attr("name", name.replace(/\d+/, docIndex));
+                });
+                $("#documentsWrapper").append(newDoc);
+                docIndex++;
             });
-        });
 
-        $(document).on('click', '.btn-edit', function() {
+            // Remove Document
+            $("#documentsWrapper").on("click", ".remove-document", function() {
+                if ($(".document-item").length > 1) {
+                    $(this).closest(".document-item").remove();
+                }
+            });
 
-            var userId = $(this).data('id');
+            // Add Bank
+            $("#addBank").click(function() {
+                let newBank = $(".bank-item:first").clone();
+                newBank.find("input, select").each(function() {
+                    $(this).val("");
+                    let name = $(this).attr("name");
+                    $(this).attr("name", name.replace(/\d+/, bankIndex));
+                });
+                $("#banksWrapper").append(newBank);
+                bankIndex++;
+            });
 
-            // Fetch user data via AJAX
-            $.ajax({
-                url: '/investors/' + userId + '/edit',
-                type: 'GET',
-                success: function(response) {
-
-                    // Populate the form fields with the fetched data
-                    $('#investorModalTitle').text('Edit User');
-                    $('#fullName').val(response.data.name);
-                    $('#email').val(response.data.email);
-                    $('#nic').val(response.data.nic);
-
-                    if (response.data.status == 1) {
-                        $('#status').prop('checked', true);
-                    } else {
-                        $('#status').prop('checked', false);
-                    }
-
-                    $('#submitForm').attr('action', '/investors/' + userId);
-                    $('#submitForm').append('<input type="hidden" name="_method" value="PUT">');
-
-                    // Show the modal
-                    $('#varyingcontentModalLabel').modal('show');
-                },
-                error: function(xhr) {
-                    console.log(xhr.responseText);
+            // Remove Bank
+            $("#banksWrapper").on("click", ".remove-bank", function() {
+                if ($(".bank-item").length > 1) {
+                    $(this).closest(".bank-item").remove();
                 }
             });
         });

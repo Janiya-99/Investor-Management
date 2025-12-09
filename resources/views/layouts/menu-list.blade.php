@@ -1,6 +1,7 @@
 <li class="pc-item pc-caption">
     <label>Navigation</label>
   </li>
+
   <li class="pc-item pc-hasmenu">
     <a href="#!" class="pc-link">
       <span class="pc-micon">
@@ -18,6 +19,7 @@
       <li class="pc-item"><a class="pc-link" href="/invoice">invoice</a></li>
     </ul> --}}
   </li>
+
   <li class="pc-item">
     <a href="{{route('users.index')}}" class="pc-link">
       <span class="pc-micon">
@@ -25,11 +27,24 @@
       </span>
       <span class="pc-mtext">Users</span>
     </a>
-  <li class="pc-item">
-    <a href="{{route('investors.index')}}" class="pc-link">
+  </li>
+
+
+
+  <li class="pc-item pc-hasmenu">
+    <a href="#!" class="pc-link">
       <span class="pc-micon">
         <i class="ph-duotone ph-users-three"></i>
       </span>
-      <span class="pc-mtext">Investors</span>
+      <span class="pc-mtext">Investor</span>
+      <span class="pc-arrow"><i data-feather="chevron-right"></i></span>
+      {{-- <span class="pc-badge">2</span> --}}
     </a>
+    <ul class="pc-submenu">
+      <li class="pc-item"><a class="pc-link" href="{{route('investors.index')}}">Create Investor</a></li>
+      {{-- <li class="pc-item"><a class="pc-link" href="/affiliate">Affiliate</a></li>
+      <li class="pc-item"><a class="pc-link" href="/finance">Finance</a></li>
+      <li class="pc-item"><a class="pc-link" href="/admins/helpdesk-dashboard">Helpdesk</a></li>
+      <li class="pc-item"><a class="pc-link" href="/invoice">invoice</a></li> --}}
+    </ul>
   </li>
