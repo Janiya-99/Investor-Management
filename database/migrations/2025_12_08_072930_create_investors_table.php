@@ -31,7 +31,7 @@ return new class extends Migration
             $table->timestamp('last_updated_date_time');
             $table->unsignedBigInteger('last_updated_by')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
-            $table->string('tax_status')->nullable();
+            $table->enum('tax_status', ['payable', 'non_payable'])->default('non_payable');
             $table->string('tax_no')->nullable();
             $table->string('otp')->nullable();
             $table->boolean('status')->default(1);

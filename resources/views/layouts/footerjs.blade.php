@@ -114,7 +114,7 @@
         resetFormAndErrors('.createModel', '.save-button');
     });
 
-    $('.btn-close').click(function() {
+    $('.btn-close, .btnClose').click(function() {
         resetFormAndErrors('.createModel', '.save-button');
     });
 
@@ -268,8 +268,6 @@
             }
         });
     });
-
-   
 </script>
 
 @if (env('APP_DARK_LAYOUT') == 'default')

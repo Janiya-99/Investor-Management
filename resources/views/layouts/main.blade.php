@@ -18,7 +18,7 @@
 
         @include('layouts.head-css')
 
-        
+
     </head>
 
     <body data-pc-preset="preset-1" data-pc-sidebar-theme="dark" data-pc-sidebar-caption="true" data-pc-direction="ltr"
@@ -34,7 +34,9 @@
                     @include('layouts.breadcrumb')
                 @endif
                 <!-- [ Main Content ] start -->
-                @yield('content')
+                <div id="zoomWrapper">
+                    @yield('content')
+                </div>
                 <!-- [ Main Content ] end -->
             </div>
         </div>
