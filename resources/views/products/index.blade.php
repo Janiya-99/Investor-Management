@@ -25,7 +25,7 @@
                 </div>
                 <div class="card-body">
                     <div class="dt-responsive table-responsive">
-                        <table id="basic-btn" class="table table-striped table-bordered nowrap data-table">
+                        <table id="basic-btn" class="table table-striped table-bordered nowrap data-table ">
                             <thead>
                                 <tr>
                                     <th>#</th>
