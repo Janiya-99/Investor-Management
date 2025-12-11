@@ -56,9 +56,6 @@ class StoreInvestorRequest extends FormRequest
             // 'last_updated_by' => 'required|integer|exists:users,id',
             // 'created_by' => 'required|integer|exists:users,id',
 
-            'tax_status' => 'required|string|max:50',
-            'tax_no' => 'required|string|max:50',
-
             // 'otp' => 'required|string|max:10',
 
             // 'status' => 'required|boolean',
