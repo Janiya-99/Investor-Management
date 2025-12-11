@@ -32,6 +32,7 @@ class Investor extends Model
         'tax_no',
         'otp',
         'status',
+        'user_id',
     ];
 
 
