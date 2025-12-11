@@ -34,6 +34,7 @@
                                     <th>Full Name</th>
                                     <th>Email</th>
                                     <th>NIC</th>
+                                    <th>Roles</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -45,6 +46,7 @@
                                     <th>Full Name</th>
                                     <th>Email</th>
                                     <th>NIC</th>
+                                    <th>Roles</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -138,11 +140,26 @@
                             </div>
 
 
-                            <div class="mb-3">
-                                <div class="form-check form-switch custom-switch-v1 form-check-inline">
-                                    <input type="checkbox" class="form-check-input input-primary" id="status"
-                                        name="status" checked value="1">
-                                    <label class="form-check-label" for="status">Active</label>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3 form-group">
+                                        <label class="form-label">Role:</label>
+                                        <select class="form-select" name="role_id" id="roleId">
+                                            <option value="">Select Role</option>
+                                            @foreach(\Spatie\Permission\Models\Role::all() as $role)
+                                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <div class="form-check form-switch custom-switch-v1 form-check-inline">
+                                            <input type="checkbox" class="form-check-input input-primary" id="status"
+                                                name="status" checked value="1">
+                                            <label class="form-check-label" for="status">Active</label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -188,6 +205,9 @@
                         data: 'nic',
                         name: 'nic'
                     }, {
+                        data: 'roles',
+                        name: 'roles'
+                    }, {
                         data: 'status',
                         name: 'status',
                         render: function(data) {
@@ -224,6 +244,13 @@
                     $('#fullName').val(response.data.name);
                     $('#email').val(response.data.email);
                     $('#nic').val(response.data.nic);
+                    
+                    // Set role if user has one
+                    if (response.data.roles && response.data.roles.length > 0) {
+                        $('#roleId').val(response.data.roles[0].id);
+                    } else {
+                        $('#roleId').val('');
+                    }
 
                     if (response.data.status == 1) {
                         $('#status').prop('checked', true);

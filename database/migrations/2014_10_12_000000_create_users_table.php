@@ -23,11 +23,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        User::create([
-            'name' => 'Admin',
-            'email' => 'admin@phoenixcoded.com',
-            'password' => Hash::make(12345678),
-        ]);
     }
 
     /**

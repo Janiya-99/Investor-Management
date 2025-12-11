@@ -8,6 +8,7 @@ use Yajra\DataTables\DataTables;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -20,10 +21,13 @@ class UserController extends Controller
             //code...
             if ($request->ajax()) {
 
-                $data = User::all();
+                $data = User::with('roles')->get();
 
                 return DataTables::of($data)
                     ->addIndexColumn()
+                    ->addColumn('roles', function ($user) {
+                        return $user->roles->pluck('name')->join(', ') ?: 'No Role';
+                    })
                     ->addColumn('action', function ($data) {
                         $buttons = '';
 
@@ -70,7 +74,15 @@ class UserController extends Controller
                 $data['profile_photo'] = 'data:' . $file->getMimeType() . ';base64,' . $fileData;
             }
             $data['password'] = Hash::make($data['password']);
-            User::create($data);
+            $user = User::create($data);
+            
+            // Assign role if provided
+            if ($request->has('role_id')) {
+                $role = Role::find($request->role_id);
+                if ($role) {
+                    $user->assignRole($role);
+                }
+            }
 
             return response()->json(['message' => 'User created successfully', 'status' => true], 200);
         } catch (\Throwable $th) {
@@ -93,8 +105,9 @@ class UserController extends Controller
     {
         try {
             //code...
-            $user = User::findOrFail($id);
-            return response()->json(['data' => $user, 'status' => true], 200);
+            $user = User::with('roles')->findOrFail($id);
+            $roles = Role::all();
+            return response()->json(['data' => $user, 'roles' => $roles, 'status' => true], 200);
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage(), 'status' => false], 500);
         }
@@ -122,6 +135,15 @@ class UserController extends Controller
             }
 
             $user->update($data);
+            
+            // Update role if provided
+            if ($request->has('role_id')) {
+                $role = Role::find($request->role_id);
+                if ($role) {
+                    $user->syncRoles([$role]);
+                }
+            }
+
             return response()->json(['message' => 'User updated successfully', 'status' => true], 200);
         } catch (\Throwable $th) {
             //throw $th;

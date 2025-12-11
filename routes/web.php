@@ -36,6 +36,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('products',ProductController::class)->names('products');
 
+    Route::resource('roles',\App\Http\Controllers\RoleController::class)->names('roles');
+
+    Route::resource('permissions',\App\Http\Controllers\PermissionController::class)->names('permissions');
+
     // Define a GET route with dynamic placeholders for route parameters
     Route::get('{routeName}/{name?}', [HomeController::class, 'pageView']);
 });
