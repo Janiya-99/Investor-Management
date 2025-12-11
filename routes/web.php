@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InvestorController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ActivityLogController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,12 +34,16 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('users',UserController::class)->names('users');
 
     Route::resource('investors',InvestorController::class)->names('investors');
+    Route::get('investors/branches/{bankId}', [InvestorController::class, 'getBranchesByBank'])->name('investors.branches');
 
     Route::resource('products',ProductController::class)->names('products');
 
     Route::resource('roles',\App\Http\Controllers\RoleController::class)->names('roles');
 
     Route::resource('permissions',\App\Http\Controllers\PermissionController::class)->names('permissions');
+
+    Route::get('activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
+    Route::get('activity-logs/{id}', [ActivityLogController::class, 'show'])->name('activity-logs.show');
 
     // Define a GET route with dynamic placeholders for route parameters
     Route::get('{routeName}/{name?}', [HomeController::class, 'pageView']);

@@ -10,6 +10,10 @@
     <!-- data tables css -->
     <link rel="stylesheet" href="{{ URL::asset('build/css/plugins/dataTables.bootstrap5.min.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('build/css/plugins/buttons.bootstrap5.min.css') }}">
+    <!-- Choices.js CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <!-- [Page specific CSS] end -->
     <style>
         .required:after {
@@ -310,16 +314,19 @@
 
                                     <div class="mb-3 col-md-3 form-group">
                                         <label class="form-label required">Bank</label>
-                                        <select class="form-select" id="banks_0_bank_id" name="banks[0][bank_id]">
-                                            <option>Select Bank</option>
+                                        <select class="form-select bank-select" id="banks_0_bank_id" name="banks[0][bank_id]">
+                                            <option value="">Select Bank</option>
+                                            @foreach($banks as $bank)
+                                                <option value="{{ $bank->id }}">{{ $bank->bank_name }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
 
                                     <div class="mb-3 col-md-3 form-group">
                                         <label class="form-label required">Branch</label>
-                                        <select class="form-select" id="banks_0_bank_branch_id"
+                                        <select class="form-select branch-select" id="banks_0_bank_branch_id"
                                             name="banks[0][bank_branch_id]">
-                                            <option>Select Branch</option>
+                                            <option value="">Select Branch</option>
                                         </select>
                                     </div>
 
@@ -358,13 +365,204 @@
 
 
 @section('scripts')
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- Choices.js JS -->
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <!-- Flatpickr JS -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <!-- Include SweetAlert from CDN -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.all.min.js" aria-hidden="true"></script>
 
     <script>
         $(document).ready(function() {
+            // Store Choices.js instances
+            const choicesInstances = new Map();
+
+            // Function to destroy Choices.js instance if exists
+            function destroyChoices(selectElement) {
+                const selectId = selectElement.id;
+                if (choicesInstances.has(selectId)) {
+                    try {
+                        choicesInstances.get(selectId).destroy();
+                    } catch (e) {
+                        console.warn('Error destroying Choices instance:', e);
+                    }
+                    choicesInstances.delete(selectId);
+                }
+                
+                // Remove Choices.js wrapper if exists
+                const $select = $(selectElement);
+                if ($select.parent().hasClass('choices')) {
+                    $select.unwrap();
+                    $select.siblings('.choices__inner, .choices__list').remove();
+                }
+                $select.removeClass('choices__input').show();
+            }
+
+            // Function to initialize Choices.js for a select element
+            function initChoices(selectElement) {
+                if (!selectElement || !selectElement.id) {
+                    console.warn('Cannot initialize Choices: element or ID missing');
+                    return null;
+                }
+                
+                // Destroy existing instance if any
+                destroyChoices(selectElement);
+                
+                // Skip if already wrapped by Choices.js
+                if ($(selectElement).closest('.choices').length > 0) {
+                    return null;
+                }
+                
+                try {
+                    const choices = new Choices(selectElement, {
+                        searchEnabled: true,
+                        itemSelectText: '',
+                        removeItemButton: false,
+                        shouldSort: false
+                    });
+                    choicesInstances.set(selectElement.id, choices);
+                    return choices;
+                } catch (e) {
+                    console.error('Error initializing Choices:', e);
+                    return null;
+                }
+            }
+
+            // Function to load branches for a bank
+            function loadBranches(bankId, branchSelectId) {
+                if (!bankId) {
+                    // Clear branches if no bank selected
+                    const branchSelect = document.getElementById(branchSelectId);
+                    if (branchSelect) {
+                        const choices = choicesInstances.get(branchSelectId);
+                        if (choices) {
+                            choices.clearChoices();
+                            choices.setChoices([{ value: '', label: 'Select Branch', selected: true, disabled: true }], 'value', 'label', false);
+                        } else {
+                            branchSelect.innerHTML = '<option value="">Select Branch</option>';
+                        }
+                    }
+                    return;
+                }
+
+                $.ajax({
+                    url: "{{ route('investors.branches', ':bankId') }}".replace(':bankId', bankId),
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.status === 'success' && response.branches) {
+                            const branchSelect = document.getElementById(branchSelectId);
+                            if (branchSelect) {
+                                const choices = choicesInstances.get(branchSelectId);
+                                
+                                // Prepare branch options
+                                const branchOptions = response.branches.map(function(branch) {
+                                    return {
+                                        value: branch.id,
+                                        label: branch.bank_branch_name + ' (' + branch.bank_branch_code + ')'
+                                    };
+                                });
+
+                                if (choices) {
+                                    // Update Choices.js instance
+                                    choices.clearChoices();
+                                    choices.setChoices(
+                                        [{ value: '', label: 'Select Branch', selected: true, disabled: true }, ...branchOptions],
+                                        'value',
+                                        'label',
+                                        false
+                                    );
+                                } else {
+                                    // Fallback if Choices.js not initialized
+                                    branchSelect.innerHTML = '<option value="">Select Branch</option>';
+                                    branchOptions.forEach(function(option) {
+                                        const optionElement = document.createElement('option');
+                                        optionElement.value = option.value;
+                                        optionElement.textContent = option.label;
+                                        branchSelect.appendChild(optionElement);
+                                    });
+                                }
+                            }
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error loading branches:', error);
+                        const branchSelect = document.getElementById(branchSelectId);
+                        if (branchSelect) {
+                            const choices = choicesInstances.get(branchSelectId);
+                            if (choices) {
+                                choices.clearChoices();
+                                choices.setChoices([{ value: '', label: 'Error loading branches', selected: true, disabled: true }], 'value', 'label', false);
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Initialize Choices.js for all select elements
+            const selectElements = document.querySelectorAll('select.form-select');
+            selectElements.forEach(function(select) {
+                const choices = initChoices(select);
+                
+                // Add event listener for bank selects using Choices.js event
+                if ($(select).hasClass('bank-select') && choices) {
+                    select.addEventListener('choice', function(event) {
+                        const bankId = event.detail.choice.value;
+                        const bankItem = $(select).closest('.bank-item');
+                        const branchSelect = bankItem.find('.branch-select');
+                        const branchSelectId = branchSelect.attr('id');
+                        
+                        // Clear branch selection
+                        const branchChoices = choicesInstances.get(branchSelectId);
+                        if (branchChoices) {
+                            branchChoices.setValue(['']);
+                        } else {
+                            branchSelect.val('');
+                        }
+                        
+                        // Load branches for selected bank
+                        loadBranches(bankId, branchSelectId);
+                    });
+                }
+            });
+
+            // Handle bank selection change (fallback for jQuery change event)
+            // This works with both regular selects and Choices.js
+            $(document).on('change', '.bank-select', function() {
+                const bankId = $(this).val();
+                if (!bankId) return;
+                
+                const bankItem = $(this).closest('.bank-item');
+                const branchSelect = bankItem.find('.branch-select');
+                const branchSelectId = branchSelect.attr('id');
+                
+                // Clear branch selection
+                const choices = choicesInstances.get(branchSelectId);
+                if (choices) {
+                    choices.setValue(['']);
+                } else {
+                    branchSelect.val('');
+                }
+                
+                // Load branches for selected bank
+                loadBranches(bankId, branchSelectId);
+            });
+
+            // Initialize Flatpickr for date inputs
+            const dateInputs = document.querySelectorAll('input[type="date"]');
+            dateInputs.forEach(function(input) {
+                // Skip if already initialized
+                if (input._flatpickr) {
+                    return;
+                }
+                flatpickr(input, {
+                    dateFormat: "Y-m-d",
+                    allowInput: true,
+                    clickOpens: true,
+                    altInput: false,
+                    maxDate: "today" // Optional: prevent future dates
+                });
+            });
 
             $('#beneficiary_relation').on('change', function() {
                 if ($(this).val() === 'Other') {
@@ -399,20 +597,94 @@
 
             // Add Bank
             $("#addBank").click(function() {
-                let newBank = $(".bank-item:first").clone();
+                let originalBank = $(".bank-item:first");
+                
+                // Clone without data and events to avoid Choices.js issues
+                let newBank = originalBank.clone(false, false);
+                
+                // Clean up any Choices.js wrappers from cloned elements
+                newBank.find("select").each(function() {
+                    const selectElement = this;
+                    destroyChoices(selectElement);
+                });
+                
+                // Update IDs and names for the new bank item
                 newBank.find("input, select").each(function() {
                     $(this).val("");
                     let name = $(this).attr("name");
-                    $(this).attr("name", name.replace(/\d+/, bankIndex));
+                    let id = $(this).attr("id");
+                    if (name) {
+                        $(this).attr("name", name.replace(/\d+/, bankIndex));
+                    }
+                    if (id) {
+                        $(this).attr("id", id.replace(/\d+/, bankIndex));
+                    }
                 });
+                
+                // Populate bank options for the new bank select
+                const newBankSelect = newBank.find('.bank-select');
+                if (newBankSelect.length) {
+                    const bankOptions = @json($banks);
+                    newBankSelect.html('<option value="">Select Bank</option>');
+                    bankOptions.forEach(function(bank) {
+                        newBankSelect.append($('<option></option>').attr('value', bank.id).text(bank.bank_name));
+                    });
+                }
+                
+                // Clear branch select
+                newBank.find('.branch-select').html('<option value="">Select Branch</option>');
+                
+                // Append to DOM first
                 $("#banksWrapper").append(newBank);
+                
+                // Now initialize Choices.js for newly added select elements
+                newBank.find("select.form-select").each(function() {
+                    const selectElement = this;
+                    const choices = initChoices(selectElement);
+                    
+                    // Add event listener for bank selects
+                    if ($(selectElement).hasClass('bank-select') && choices) {
+                        // Use Choices.js event
+                        selectElement.addEventListener('choice', function(event) {
+                            // Get value from the select element itself (more reliable)
+                            const bankId = $(selectElement).val();
+                            if (!bankId) return;
+                            
+                            const bankItem = $(selectElement).closest('.bank-item');
+                            const branchSelect = bankItem.find('.branch-select');
+                            const branchSelectId = branchSelect.attr('id');
+                            
+                            // Clear branch selection
+                            const branchChoices = choicesInstances.get(branchSelectId);
+                            if (branchChoices) {
+                                branchChoices.setValue(['']);
+                            } else {
+                                branchSelect.val('');
+                            }
+                            
+                            // Load branches for selected bank
+                            loadBranches(bankId, branchSelectId);
+                        });
+                    }
+                });
+                
+                // The jQuery change event handler above (line 530) will handle this via event delegation
+                // No need to bind separately as it's already bound to all .bank-select elements
+                
                 bankIndex++;
             });
 
             // Remove Bank
             $("#banksWrapper").on("click", ".remove-bank", function() {
                 if ($(".bank-item").length > 1) {
-                    $(this).closest(".bank-item").remove();
+                    const bankItem = $(this).closest(".bank-item");
+                    
+                    // Clean up Choices.js instances before removing
+                    bankItem.find("select").each(function() {
+                        destroyChoices(this);
+                    });
+                    
+                    bankItem.remove();
                 }
             });
         });

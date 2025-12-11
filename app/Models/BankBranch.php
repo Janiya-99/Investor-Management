@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\Loggable;
 
 class BankBranch extends Model
 {
-    use HasFactory;
+    use HasFactory, Loggable;
 
     protected $fillable = ['bank_id', 'bank_branch_code', 'bank_branch_name'];
     protected $table = 'bank_branches';

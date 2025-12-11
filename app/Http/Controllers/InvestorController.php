@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Investor;
+use App\Models\Bank;
+use App\Models\BankBranch;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\StoreInvestorRequest;
 use Illuminate\Http\Request;
@@ -51,7 +53,8 @@ class InvestorController extends Controller
      */
     public function create()
     {
-        return view('investors.create');
+        $banks = Bank::orderBy('bank_name', 'asc')->get();
+        return view('investors.create', compact('banks'));
     }
 
     /**
@@ -145,6 +148,22 @@ class InvestorController extends Controller
             return response()->json(['message' => 'Investor deleted successfully', 'status' => 'success'], 200);
         } catch (\Throwable $th) {
             return response()->json(['message' => 'Failed to delete investor', 'status' => 'error'], 500);
+        }
+    }
+
+    /**
+     * Get branches by bank ID
+     */
+    public function getBranchesByBank(Request $request, $bankId)
+    {
+        try {
+            $branches = BankBranch::where('bank_id', $bankId)
+                ->orderBy('bank_branch_name', 'asc')
+                ->get(['id', 'bank_branch_code', 'bank_branch_name']);
+            
+            return response()->json(['branches' => $branches, 'status' => 'success'], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Failed to fetch branches', 'status' => 'error'], 500);
         }
     }
 }
