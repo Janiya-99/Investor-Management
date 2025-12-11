@@ -33,8 +33,12 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('users',UserController::class)->names('users');
 
-    Route::resource('investors',InvestorController::class)->names('investors');
     Route::get('investors/branches/{bankId}', [InvestorController::class, 'getBranchesByBank'])->name('investors.branches');
+    Route::get('investors/documents', [InvestorController::class, 'documentsPage'])->name('investors.documents.edit');
+    Route::put('investors/documents', [InvestorController::class, 'updateDocuments'])->name('investors.documents.update');
+    Route::get('investors/bank-details', [InvestorController::class, 'bankDetailsPage'])->name('investors.banks.edit');
+    Route::put('investors/bank-details', [InvestorController::class, 'updateBankDetails'])->name('investors.banks.update');
+    Route::resource('investors',InvestorController::class)->names('investors');
 
     Route::resource('products',ProductController::class)->names('products');
 

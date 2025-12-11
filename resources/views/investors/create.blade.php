@@ -21,12 +21,90 @@
             color: red;
             font-weight: bold;
         }
+
+        .step-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px dashed #dfe3eb;
+            background: #f8fafc;
+            height: 100%;
+        }
+
+        .step-pill .icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            background: #e8f3ff;
+            color: #2563eb;
+        }
+
+        .card-header .eyebrow {
+            font-size: 12px;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: #64748b;
+        }
     </style>
 
 @endsection
 
 @section('content')
     <div class="row">
+
+        <div class="col-12 mb-3">
+            <div class="row g-3">
+                <div class="col-12 col-md-6 col-xl-2">
+                    <div class="step-pill shadow-none">
+                        <div class="icon"><i class="ph-duotone ph-identification-card"></i></div>
+                        <div>
+                            <div class="text-muted small">Step 1</div>
+                            <div class="fw-semibold">Identity</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-xl-2">
+                    <div class="step-pill shadow-none">
+                        <div class="icon"><i class="ph-duotone ph-users-three"></i></div>
+                        <div>
+                            <div class="text-muted small">Step 2</div>
+                            <div class="fw-semibold">Beneficiary</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-xl-2">
+                    <div class="step-pill shadow-none">
+                        <div class="icon"><i class="ph-duotone ph-file-text"></i></div>
+                        <div>
+                            <div class="text-muted small">Step 3</div>
+                            <div class="fw-semibold">Compliance</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-xl-3">
+                    <div class="step-pill shadow-none">
+                        <div class="icon"><i class="ph-duotone ph-cloud-arrow-up"></i></div>
+                        <div>
+                            <div class="text-muted small">Step 4</div>
+                            <div class="fw-semibold">Documents & KYC</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-xl-3">
+                    <div class="step-pill shadow-none">
+                        <div class="icon"><i class="ph-duotone ph-bank"></i></div>
+                        <div>
+                            <div class="text-muted small">Step 5</div>
+                            <div class="fw-semibold">Bank & Payouts</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Sticky Header -->
         <div id="sticky-action" class="sticky-action mb-3">
@@ -53,7 +131,7 @@
             @csrf
 
             <!-- Investor Information -->
-            <div class="col-12 mb-3">
+            <div class="col-12 mb-3" id="documentsSection">
                 <div class="card">
                     <div class="card-header">
                         <h5>Investor Information</h5>
@@ -151,7 +229,7 @@
             </div>
 
             <!-- Beneficiary Information -->
-            <div class="col-12 mb-3">
+            <div class="col-12 mb-3" id="banksSection">
                 <div class="card">
                     <div class="card-header">
                         <h5>Beneficiary Information</h5>
@@ -222,13 +300,16 @@
                             <div class="mb-3 col-md-4 form-group">
                                 <label class="form-label required">Registration Date</label>
                                 <input type="date" class="form-control" id="registration_date"
-                                    name="registration_date">
+                                    name="registration_date" placeholder="Enter Registration Date">
                             </div>
 
                             <div class="mb-3 col-md-4 form-group">
                                 <label class="form-label required">Tax Status</label>
-                                <input type="text" class="form-control" id="tax_status" name="tax_status"
-                                    placeholder="Enter Tax Status">
+                                <select class="form-select" id="tax_status" name="tax_status">
+                                    <option value="">Select Status</option>
+                                    <option value="payable">Payable</option>
+                                    <option value="non_payable">Non Payable</option>
+                                </select>
                             </div>
 
                             <div class="mb-3 col-md-4 form-group">
@@ -247,12 +328,15 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="row align-items-center">
-                            <div class="col-sm-6">
-                                <h5>Documents</h5>
+                            <div class="col-sm-7">
+                                <div class="eyebrow">KYC / Compliance</div>
+                                <h5 class="mb-0">Documents</h5>
+                                <small class="text-muted">Upload clear scans (jpg, png, pdf up to 2MB each).</small>
                             </div>
-                            <div class="col-sm-6 text-sm-end">
-                                <button type="button" class="btn btn-outline-primary text-end" id="addDocument">+ Add
-                                    Document</button>
+                            <div class="col-sm-5 text-sm-end">
+                                <button type="button" class="btn btn-outline-primary text-end" id="addDocument">
+                                    <i class="ph-duotone ph-plus-square"></i> Add Document
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -273,7 +357,8 @@
                                     <div class="mb-3 col-md-5 form-group">
                                         <label class="form-label required">Upload Document</label>
                                         <input type="file" class="form-control" id="documents_0_document_path"
-                                            name="documents[0][document_path]">
+                                            name="documents[0][document_path]" accept=".jpg,.jpeg,.png,.pdf">
+                                        <small class="text-muted">Accepted: PDF, JPG, PNG</small>
                                     </div>
 
                                     <div class="mb-3 col-md-2 d-flex justify-content-end">
@@ -296,11 +381,15 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="row align-items-center">
-                            <div class="col-sm-6">
-                                <h5>Bank Details</h5>
+                            <div class="col-sm-7">
+                                <div class="eyebrow">Payments</div>
+                                <h5 class="mb-0">Bank Details</h5>
+                                <small class="text-muted">Add at least one account for withdrawals.</small>
                             </div>
-                            <div class="col-sm-6 text-sm-end">
-                                <button type="button" class="btn btn-outline-primary" id="addBank">+ Add Bank</button>
+                            <div class="col-sm-5 text-sm-end">
+                                <button type="button" class="btn btn-outline-primary" id="addBank">
+                                    <i class="ph-duotone ph-plus-square"></i> Add Bank
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -314,9 +403,10 @@
 
                                     <div class="mb-3 col-md-3 form-group">
                                         <label class="form-label required">Bank</label>
-                                        <select class="form-select bank-select" id="banks_0_bank_id" name="banks[0][bank_id]">
+                                        <select class="form-select bank-select" id="banks_0_bank_id"
+                                            name="banks[0][bank_id]">
                                             <option value="">Select Bank</option>
-                                            @foreach($banks as $bank)
+                                            @foreach ($banks as $bank)
                                                 <option value="{{ $bank->id }}">{{ $bank->bank_name }}</option>
                                             @endforeach
                                         </select>
@@ -388,7 +478,7 @@
                     }
                     choicesInstances.delete(selectId);
                 }
-                
+
                 // Remove Choices.js wrapper if exists
                 const $select = $(selectElement);
                 if ($select.parent().hasClass('choices')) {
@@ -404,15 +494,15 @@
                     console.warn('Cannot initialize Choices: element or ID missing');
                     return null;
                 }
-                
+
                 // Destroy existing instance if any
                 destroyChoices(selectElement);
-                
+
                 // Skip if already wrapped by Choices.js
                 if ($(selectElement).closest('.choices').length > 0) {
                     return null;
                 }
-                
+
                 try {
                     const choices = new Choices(selectElement, {
                         searchEnabled: true,
@@ -437,7 +527,12 @@
                         const choices = choicesInstances.get(branchSelectId);
                         if (choices) {
                             choices.clearChoices();
-                            choices.setChoices([{ value: '', label: 'Select Branch', selected: true, disabled: true }], 'value', 'label', false);
+                            choices.setChoices([{
+                                value: '',
+                                label: 'Select Branch',
+                                selected: true,
+                                disabled: true
+                            }], 'value', 'label', false);
                         } else {
                             branchSelect.innerHTML = '<option value="">Select Branch</option>';
                         }
@@ -454,12 +549,13 @@
                             const branchSelect = document.getElementById(branchSelectId);
                             if (branchSelect) {
                                 const choices = choicesInstances.get(branchSelectId);
-                                
+
                                 // Prepare branch options
                                 const branchOptions = response.branches.map(function(branch) {
                                     return {
                                         value: branch.id,
-                                        label: branch.bank_branch_name + ' (' + branch.bank_branch_code + ')'
+                                        label: branch.bank_branch_name + ' (' + branch
+                                            .bank_branch_code + ')'
                                     };
                                 });
 
@@ -467,7 +563,12 @@
                                     // Update Choices.js instance
                                     choices.clearChoices();
                                     choices.setChoices(
-                                        [{ value: '', label: 'Select Branch', selected: true, disabled: true }, ...branchOptions],
+                                        [{
+                                            value: '',
+                                            label: 'Select Branch',
+                                            selected: true,
+                                            disabled: true
+                                        }, ...branchOptions],
                                         'value',
                                         'label',
                                         false
@@ -492,7 +593,12 @@
                             const choices = choicesInstances.get(branchSelectId);
                             if (choices) {
                                 choices.clearChoices();
-                                choices.setChoices([{ value: '', label: 'Error loading branches', selected: true, disabled: true }], 'value', 'label', false);
+                                choices.setChoices([{
+                                    value: '',
+                                    label: 'Error loading branches',
+                                    selected: true,
+                                    disabled: true
+                                }], 'value', 'label', false);
                             }
                         }
                     }
@@ -503,7 +609,7 @@
             const selectElements = document.querySelectorAll('select.form-select');
             selectElements.forEach(function(select) {
                 const choices = initChoices(select);
-                
+
                 // Add event listener for bank selects using Choices.js event
                 if ($(select).hasClass('bank-select') && choices) {
                     select.addEventListener('choice', function(event) {
@@ -511,7 +617,7 @@
                         const bankItem = $(select).closest('.bank-item');
                         const branchSelect = bankItem.find('.branch-select');
                         const branchSelectId = branchSelect.attr('id');
-                        
+
                         // Clear branch selection
                         const branchChoices = choicesInstances.get(branchSelectId);
                         if (branchChoices) {
@@ -519,7 +625,7 @@
                         } else {
                             branchSelect.val('');
                         }
-                        
+
                         // Load branches for selected bank
                         loadBranches(bankId, branchSelectId);
                     });
@@ -531,11 +637,11 @@
             $(document).on('change', '.bank-select', function() {
                 const bankId = $(this).val();
                 if (!bankId) return;
-                
+
                 const bankItem = $(this).closest('.bank-item');
                 const branchSelect = bankItem.find('.branch-select');
                 const branchSelectId = branchSelect.attr('id');
-                
+
                 // Clear branch selection
                 const choices = choicesInstances.get(branchSelectId);
                 if (choices) {
@@ -543,7 +649,7 @@
                 } else {
                     branchSelect.val('');
                 }
-                
+
                 // Load branches for selected bank
                 loadBranches(bankId, branchSelectId);
             });
@@ -598,16 +704,16 @@
             // Add Bank
             $("#addBank").click(function() {
                 let originalBank = $(".bank-item:first");
-                
+
                 // Clone without data and events to avoid Choices.js issues
                 let newBank = originalBank.clone(false, false);
-                
+
                 // Clean up any Choices.js wrappers from cloned elements
                 newBank.find("select").each(function() {
                     const selectElement = this;
                     destroyChoices(selectElement);
                 });
-                
+
                 // Update IDs and names for the new bank item
                 newBank.find("input, select").each(function() {
                     $(this).val("");
@@ -620,28 +726,29 @@
                         $(this).attr("id", id.replace(/\d+/, bankIndex));
                     }
                 });
-                
+
                 // Populate bank options for the new bank select
                 const newBankSelect = newBank.find('.bank-select');
                 if (newBankSelect.length) {
                     const bankOptions = @json($banks);
                     newBankSelect.html('<option value="">Select Bank</option>');
                     bankOptions.forEach(function(bank) {
-                        newBankSelect.append($('<option></option>').attr('value', bank.id).text(bank.bank_name));
+                        newBankSelect.append($('<option></option>').attr('value', bank.id).text(bank
+                            .bank_name));
                     });
                 }
-                
+
                 // Clear branch select
                 newBank.find('.branch-select').html('<option value="">Select Branch</option>');
-                
+
                 // Append to DOM first
                 $("#banksWrapper").append(newBank);
-                
+
                 // Now initialize Choices.js for newly added select elements
                 newBank.find("select.form-select").each(function() {
                     const selectElement = this;
                     const choices = initChoices(selectElement);
-                    
+
                     // Add event listener for bank selects
                     if ($(selectElement).hasClass('bank-select') && choices) {
                         // Use Choices.js event
@@ -649,11 +756,11 @@
                             // Get value from the select element itself (more reliable)
                             const bankId = $(selectElement).val();
                             if (!bankId) return;
-                            
+
                             const bankItem = $(selectElement).closest('.bank-item');
                             const branchSelect = bankItem.find('.branch-select');
                             const branchSelectId = branchSelect.attr('id');
-                            
+
                             // Clear branch selection
                             const branchChoices = choicesInstances.get(branchSelectId);
                             if (branchChoices) {
@@ -661,16 +768,16 @@
                             } else {
                                 branchSelect.val('');
                             }
-                            
+
                             // Load branches for selected bank
                             loadBranches(bankId, branchSelectId);
                         });
                     }
                 });
-                
+
                 // The jQuery change event handler above (line 530) will handle this via event delegation
                 // No need to bind separately as it's already bound to all .bank-select elements
-                
+
                 bankIndex++;
             });
 
@@ -678,12 +785,12 @@
             $("#banksWrapper").on("click", ".remove-bank", function() {
                 if ($(".bank-item").length > 1) {
                     const bankItem = $(this).closest(".bank-item");
-                    
+
                     // Clean up Choices.js instances before removing
                     bankItem.find("select").each(function() {
                         destroyChoices(this);
                     });
-                    
+
                     bankItem.remove();
                 }
             });

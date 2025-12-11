@@ -212,38 +212,28 @@
             error: function(xhr, status, error) {
                 $('.spinner-border').hide();
                 $('#submitFormBtn').show();
-                if (xhr.status === 422) {
-                    // Handle validation errors
-                    var errors = xhr.responseJSON.errors;
-                    if (errors) {
-                        $.each(errors, function(key, value) {
-                            // Check if the key is an array field
-                            if (key.includes('.')) {
-                                var parts = key.split('.');
-                                var fieldName = parts[0] + '[]';
-                                var index = parts[1];
+            if (xhr.status === 422) {
+                var errors = xhr.responseJSON.errors;
+                if (errors) {
+                    $.each(errors, function(key, value) {
+                        // Convert validation key (e.g., documents.0.description) to input name (documents[0][description])
+                        var inputName = key.replace(/\.(\d+)\./g, '[$1][').replace(/\.(\w+)$/g, '[$1]');
+                        var inputField = $('[name="' + inputName + '"]');
 
-                                console.log(fieldName);
+                        if (!inputField.length && key.includes('.')) {
+                            // Fallback: try top-level name if exact match not found
+                            var baseKey = key.split('.')[0];
+                            inputField = $('[name="' + baseKey + '"]');
+                        }
 
-                                var inputField = $('[name="' + fieldName + '"]').eq(
-                                    index);
-                                inputField.addClass('is-invalid');
-                                inputField.closest('.form-group').append(
-                                    '<div class="invalid-feedback">' + value[0] +
-                                    '</div>'
-                                );
-                            } else {
-                                // For non-array fields
-                                var inputField = $('[name="' + key + '"]');
-                                inputField.addClass('is-invalid');
-                                inputField.closest('.form-group').append(
-                                    '<div class="invalid-feedback">' + value[0] +
-                                    '</div>'
-                                );
-                            }
-                        });
-                    }
-                } else if (xhr.status === 500) {
+                        if (inputField.length) {
+                            inputField.addClass('is-invalid');
+                            var container = inputField.closest('.form-group').length ? inputField.closest('.form-group') : inputField.parent();
+                            container.append('<div class="invalid-feedback">' + value[0] + '</div>');
+                        }
+                    });
+                }
+            } else if (xhr.status === 500) {
                     var errorMessage = xhr.responseJSON
                         .message; // Assuming the server sends an error message in the response
                     Swal.fire({

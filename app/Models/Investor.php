@@ -37,5 +37,18 @@ class Investor extends Model
     ];
 
 
-    
+    public function documents()
+    {
+        return $this->hasMany(InvestorHasDocument::class);
+    }
+
+    public function bankDetails()
+    {
+        return $this->hasMany(InvestorHasBankDetails::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

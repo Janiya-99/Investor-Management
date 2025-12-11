@@ -248,8 +248,11 @@
 
                                             <div class="mb-3 col-md-4 form-group">
                                                 <label class="form-label required">Tax Status</label>
-                                                <input type="text" class="form-control" id="tax_status"
-                                                    name="tax_status" placeholder="Enter Tax Status">
+                                                <select class="form-select" id="tax_status" name="tax_status">
+                                                    <option value="">Select Status</option>
+                                                    <option value="payable">Payable</option>
+                                                    <option value="non_payable">Non Payable</option>
+                                                </select>
                                             </div>
 
                                             <div class="mb-3 col-md-4 form-group">

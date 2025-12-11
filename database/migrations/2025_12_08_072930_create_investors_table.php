@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -31,6 +32,7 @@ return new class extends Migration
             $table->timestamp('last_updated_date_time');
             $table->unsignedBigInteger('last_updated_by')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
+            $table->foreignIdFor(User::class)->constrained('users');
             $table->enum('tax_status', ['payable', 'non_payable'])->default('non_payable');
             $table->string('tax_no')->nullable();
             $table->string('otp')->nullable();

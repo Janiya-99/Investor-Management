@@ -110,13 +110,13 @@
       </li>
 
       <li class="pc-item">
-          <a class="pc-link" href="{{ route('investors.index') }}">
+          <a class="pc-link" href="/investors/documents">
               Documents
           </a>
       </li>
 
       <li class="pc-item">
-          <a class="pc-link" href="{{ route('investors.index') }}">
+          <a class="pc-link" href="{{ route('investors.banks.edit') }}">
               Bank Details
           </a>
       </li>

@@ -23,7 +23,6 @@ class StoreInvestorRequest extends FormRequest
     {
         $id = $this->route('investor')?->id;
         return [
-
             'title' => 'required|string|max:50',
 
             'first_name' => 'required|string|max:255',
@@ -35,7 +34,7 @@ class StoreInvestorRequest extends FormRequest
 
             'contact_no' => 'required|string|max:20',
 
-            'password' => $id ? 'sometimes|nullable|string|min:8' : 'required|string|min:8',
+            'password' => $id ? 'sometimes|nullable|string|min:8' : 'nullable|string|min:8',
 
             'address_line_1' => 'required|string',
             'address_line_2' => 'required|string',
@@ -50,26 +49,16 @@ class StoreInvestorRequest extends FormRequest
 
             'tax_status' => 'required|string|max:50',
             'tax_no' => 'required|string|max:50',
+            
+            'documents' => 'nullable|array|min:0',
+            'documents.*.description' => 'required_with:documents.*.document_path|string|max:255',
+            'documents.*.document_path' => 'required_with:documents.*.description|file|mimes:jpg,jpeg,png,pdf|max:2048',
 
-            // 'last_updated_date_time' => 'required|date',
-
-            // 'last_updated_by' => 'required|integer|exists:users,id',
-            // 'created_by' => 'required|integer|exists:users,id',
-
-            // 'otp' => 'required|string|max:10',
-
-            // 'status' => 'required|boolean',
-
-            // 'documents' => 'required|array|min:1',
-            // 'documents.*.description' => 'required|string|max:255',
-            // 'documents.*.document_path' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
-
-            // // Banks (array)
-            // 'banks.*' => 'required|array|min:1',
-            // 'banks.*.bank_id' => 'required',
-            // 'banks.*.bank_branch_id' => 'required',
-            // 'banks.*.account_number' => 'required|string|max:50',
-            // 'banks.*.account_name' => 'required|string|max:255',
+            'banks' => 'required|array|min:1',
+            'banks.*.bank_id' => 'required|exists:banks,id',
+            'banks.*.bank_branch_id' => 'required|exists:bank_branches,id',
+            'banks.*.account_number' => 'required|string|max:50',
+            'banks.*.account_name' => 'required|string|max:255',
         ];
     }
 
