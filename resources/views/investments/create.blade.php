@@ -118,13 +118,6 @@
                                        >
                             </div>
 
-                            {{-- Penalty Rate --}}
-                            <div class="col-md-4 mb-3 form-group">
-                                <label class="form-label">Penalty Rate (%)</label>
-                                <input type="number" step="0.0001" name="penalty_rate" class="form-control"
-                                       value="{{ old('penalty_rate', $investment->penalty_rate ?? '0') }}">
-                            </div>
-
                             {{-- Capital Withdrawal Notice Period --}}
                             <div class="col-md-4 mb-3 form-group">
                                 <label class="form-label required">Withdrawal Notice (Days)</label>

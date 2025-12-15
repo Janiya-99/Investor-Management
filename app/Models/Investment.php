@@ -22,7 +22,9 @@ class Investment extends Model
         'start_date',
         'maturity_date',
         'capital_withdrawal_notice_period',
-        'penalty_rate',
+        'penalty_min_rate',
+        'penalty_max_rate',
+        'penalty_type',
         'status',
         'notes',
         'created_by',
@@ -34,7 +36,8 @@ class Investment extends Model
         'maturity_date' => 'date',
         'investment_amount' => 'decimal:2',
         'interest_rate' => 'decimal:4',
-        'penalty_rate' => 'decimal:4',
+        'penalty_min_rate' => 'decimal:4',
+        'penalty_max_rate' => 'decimal:4',
     ];
 
     public function investor()

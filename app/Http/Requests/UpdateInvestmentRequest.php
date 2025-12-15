@@ -28,6 +28,7 @@ class UpdateInvestmentRequest extends FormRequest
             'investor_bank_details_id' => ['nullable', 'exists:investor_has_bank_details,id'],
             'investment_amount' => ['required', 'numeric', 'min:0.01'],
             'interest_rate' => ['required', 'numeric', 'min:0'],
+            'interest_calculation_type' => ['required', 'string', 'in:simple,compound'],
             'period_type' => ['required', 'string', 'max:50'],
             'period' => ['required', 'integer', 'min:1'],
             'start_date' => ['required', 'date'],
