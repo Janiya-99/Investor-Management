@@ -5,9 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e8eac10e-fd13-446b-8f96-5f4c2b621b46" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/InvestmentController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/InvestmentController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2025_12_11_100000_create_investments_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2025_12_11_100000_create_investments_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/investments/create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/investments/create.blade.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

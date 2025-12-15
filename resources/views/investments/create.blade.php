@@ -97,11 +97,18 @@
                         {{-- Period Type --}}
                         <div class="col-md-2">
                             <label class="form-label">Period Type <span class="text-danger">*</span></label>
-                            <input type="text" name="period_type"
-                                   value="{{ old('period_type', $investment->period_type ?? '') }}"
-                                   class="form-control @error('period_type') is-invalid @enderror" placeholder="Months / Years" required>
+                            <select name="period_type"
+                                    class="form-control @error('period_type') is-invalid @enderror"
+                                    required>
+                                <option value="">Select Period Type</option>
+                                <option value="days" {{ old('period_type', $investment->period_type ?? '') == 'days' ? 'selected' : '' }}>Days</option>
+                                <option value="weeks" {{ old('period_type', $investment->period_type ?? '') == 'weeks' ? 'selected' : '' }}>Weeks</option>
+                                <option value="months" {{ old('period_type', $investment->period_type ?? '') == 'months' ? 'selected' : '' }}>Months</option>
+                                <option value="years" {{ old('period_type', $investment->period_type ?? '') == 'years' ? 'selected' : '' }}>Years</option>
+                            </select>
+
                             @error('period_type')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
@@ -177,27 +184,35 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.all.min.js" aria-hidden="true"></script>
 
 
-<script>
-$(document).ready(function() {
-    // flatpickr('.datepicker', { dateFormat: 'Y-m-d', disableMobile: true });
+    <script>
+        $(document).ready(function() {
 
-    $('.js-choice-search').each(function() {
-        new Choices(this, { searchEnabled: true, shouldSort: false, placeholder: true, itemSelectText: '' });
-    });
+            $('.js-choice-search').each(function() {
+                new Choices(this, {
+                    searchEnabled: true,
+                    shouldSort: false,
+                    placeholder: true,
+                    itemSelectText: ''
+                });
+            });
 
-    // Auto-fill fields based on product selection
-    $('#productSelect').on('change', function() {
-        const selected = $(this).find(':selected');
-        const investmentAmount = selected.data('investment-amount') || '';
-        const interestRate = selected.data('interest-rate') || '';
-        const period = selected.data('period') || '';
-        const periodType = selected.data('period-type') || '';
+            // Auto-fill fields based on product selection
+            $('#productSelect').on('change', function() {
+                const selected = $(this).find(':selected');
 
-        $('input[name="investment_amount"]').val(investmentAmount);
-        $('input[name="interest_rate"]').val(interestRate);
-        $('input[name="period"]').val(period);
-        $('input[name="period_type"]').val(periodType);
-    });
-});
-</script>
+                const investmentAmount = selected.data('investment-amount') || '';
+                const interestRate = selected.data('interest-rate') || '';
+                const period = selected.data('period') || '';
+                const periodType = selected.data('period-type') || '';
+
+                $('input[name="investment_amount"]').val(investmentAmount);
+                $('input[name="interest_rate"]').val(interestRate);
+                $('input[name="period"]').val(period);
+
+                // ✅ FIX: set selected option on dropdown
+                $('select[name="period_type"]').val(periodType).trigger('change');
+            });
+        });
+    </script>
+
 @endsection
