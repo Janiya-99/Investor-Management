@@ -1,5 +1,10 @@
 <!-- [ Sidebar Menu ] start -->
 <nav class="pc-sidebar">
+    <script>
+        if (localStorage.getItem('sidebar-hide') === 'true') {
+            document.querySelector('.pc-sidebar').classList.add('pc-sidebar-hide');
+        }
+    </script>
     <div class="navbar-wrapper">
         <div class="m-header">
             <a href="/dashboard" class="b-brand text-primary">

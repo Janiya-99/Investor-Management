@@ -5,14 +5,6 @@ document.addEventListener("DOMContentLoaded", function () {
   feather.replace();
   // feather icon end
 
-  // Restore sidebar state
-  if (localStorage.getItem("sidebar-hide") === "true") {
-    var sidebar = document.querySelector(".pc-sidebar");
-    if (sidebar) {
-      sidebar.classList.add("pc-sidebar-hide");
-    }
-  }
-
   // remove pre-loader start
   setTimeout(function () {
     document.querySelector(".loader-bg").remove();
