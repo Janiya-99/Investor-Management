@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e8eac10e-fd13-446b-8f96-5f4c2b621b46" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/investments/create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/investments/create.blade.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
