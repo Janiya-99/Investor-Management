@@ -51,7 +51,8 @@
                                         data-investment-amount="{{ $product->default_investment ?? '' }}"
                                         data-interest-rate="{{ $product->interest_rate ?? '' }}"
                                         data-period="{{ $product->period ?? '' }}"
-                                        data-period-type="{{ $product->period_type ?? '' }}">
+                                        data-period-type="{{ $product->period_type ?? '' }}"
+                                        data-interest-calculation-type="{{ $product->interest_calculation_type ?? '' }}">
                                         {{ $product->name }} ({{ $product->period }} {{ $product->period_type }})
                                     </option>
                                 @endforeach
@@ -108,6 +109,31 @@
                             </select>
 
                             @error('period_type')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        {{-- Investment Type / Interest Calculation Type --}}
+                        <div class="col-md-2">
+                            <label class="form-label">
+                                Interest Calculation Type <span class="text-danger">*</span>
+                            </label>
+
+                            <select name="interest_calculation_type"
+                                    class="form-control @error('interest_calculation_type') is-invalid @enderror"
+                                    required>
+                                <option value="">Select Type</option>
+                                <option value="simple"
+                                        {{ old('interest_calculation_type', $investment->interest_calculation_type ?? '') == 'simple' ? 'selected' : '' }}>
+                                    Simple
+                                </option>
+                                <option value="compound"
+                                        {{ old('interest_calculation_type', $investment->interest_calculation_type ?? '') == 'compound' ? 'selected' : '' }}>
+                                    Compound
+                                </option>
+                            </select>
+
+                            @error('interest_calculation_type')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -204,13 +230,15 @@
                 const interestRate = selected.data('interest-rate') || '';
                 const period = selected.data('period') || '';
                 const periodType = selected.data('period-type') || '';
+                const interestCalcType = selected.data('interest-calculation-type') || '';
 
                 $('input[name="investment_amount"]').val(investmentAmount);
                 $('input[name="interest_rate"]').val(interestRate);
                 $('input[name="period"]').val(period);
 
-                // ✅ FIX: set selected option on dropdown
+                // ✅ Auto-select dropdowns
                 $('select[name="period_type"]').val(periodType).trigger('change');
+                $('select[name="interest_calculation_type"]').val(interestCalcType).trigger('change');
             });
         });
     </script>
