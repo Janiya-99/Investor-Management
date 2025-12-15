@@ -8,7 +8,9 @@ use App\Models\Investor;
 use App\Models\InvestorHasBankDetails;
 use App\Models\Investment;
 use App\Models\Product;
+use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class InvestmentController extends Controller
@@ -58,6 +60,8 @@ class InvestmentController extends Controller
      */
     public function store(StoreInvestmentRequest $request)
     {
+        DB::beginTransaction();
+
         try {
             $data = $request->validated();
             $data['created_by'] = Auth::id();
@@ -65,11 +69,31 @@ class InvestmentController extends Controller
 
             Investment::create($data);
 
-            return response()->json(['message' => 'Investment created successfully.', 'status' => 'success', 'next_path' => route('investments.index')], 200);
-        } catch (\Throwable $th) {
-            Log::error('Failed to create investment', ['error' => $th->getMessage()]);
+            // Logic to add the details to Interest Schedule
 
-            return response()->json(['message' => 'Unable to create investment. Please try again.', 'status' => 'error'], 500);
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Investment created successfully.',
+                'status' => 'success',
+                'next_path' => route('investments.index')
+            ], 201);
+
+        } catch (Exception $th) {
+            DB::rollBack();
+
+            Log::error('Failed to create investment', [
+                'error' => $th->getMessage(),
+                'trace' => $th->getTraceAsString(),
+                'user_id' => Auth::id(),
+                'data' => $request->except(['password', 'token']) // Exclude sensitive data if any
+            ]);
+
+            return response()->json([
+                'message' => 'Unable to create investment. Please try again.',
+                'status' => 'error'
+            ], 500);
         }
     }
 
