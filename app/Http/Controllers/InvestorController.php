@@ -78,9 +78,10 @@ class InvestorController extends Controller
             $data['created_by'] = Auth::id();
             $data['last_updated_by'] = Auth::id();
 
-           $user = User::create($data);
+            $user = User::create($data);
 
-        //    $user->assignRole('investor');
+            $user->assignRole('Investor');
+
             $data['user_id'] = $user->id;
             $investor = Investor::create($data);
 
@@ -95,20 +96,26 @@ class InvestorController extends Controller
                 }
             }
 
-            if ($request->hasFile('documents')) {
+
+            if ($request->hasFile('documents.*.document_path')) {
                 $documents = $request->input('documents', []);
                 foreach ($request->file('documents') as $index => $document) {
                     $file = $document['document_path'] ?? null;
+
                     if (!$file) {
                         continue;
                     }
 
-                    $storedPath = $file->store("investors/{$investor->id}/documents", 'public');
+                    // Build the path inside storage/app
+                    $path = "investors/{$investor->id}/documents/" . $file->getClientOriginalName();
+
+                    // Store file in storage/app using Storage::disk('local')
+                    Storage::disk('local')->put($path, file_get_contents($file));
 
                     $investor->documents()->create([
                         'description' => $documents[$index]['description'] ?? null,
                         'document_path' => $file->getClientOriginalName(),
-                        'file_path' => $storedPath,
+                        'file_path' => $path,
                         'uploaded_by' => Auth::id(),
                         'uploaded_at' => now(),
                     ]);
@@ -172,14 +179,14 @@ class InvestorController extends Controller
                     ]);
                 }
             }
-            
+
             $user = User::findOrFail($investor->user_id);
             if (!empty($data['password'])) {
                 $data['password'] = Hash::make($data['password']);
             } else {
                 unset($data['password']);
             }
-            
+
             $user->update($data);
 
             if ($request->hasFile('documents')) {
@@ -201,7 +208,7 @@ class InvestorController extends Controller
                     ]);
                 }
             }
-            
+
             DB::commit();
 
             return response()->json(['message' => 'Investor updated successfully', 'status' => 'success'], 200);
@@ -217,10 +224,18 @@ class InvestorController extends Controller
     public function destroy(Investor $investor)
     {
         try {
+            DB::beginTransaction();
+
             $investor->delete();
+
+            $user = User::findOrFail($investor->user_id);
+            $user->update(['status' => 0]);
+
+            DB::commit();
             return response()->json(['message' => 'Investor deleted successfully', 'status' => 'success'], 200);
         } catch (\Throwable $th) {
-            return response()->json(['message' => 'Failed to delete investor', 'status' => 'error'], 500);
+            DB::rollBack();
+            return response()->json(['message' => $th->getMessage(), 'status' => 'error'], 500);
         }
     }
 
@@ -233,7 +248,7 @@ class InvestorController extends Controller
             $branches = BankBranch::where('bank_id', $bankId)
                 ->orderBy('bank_branch_name', 'asc')
                 ->get(['id', 'bank_branch_code', 'bank_branch_name']);
-            
+
             return response()->json(['branches' => $branches, 'status' => 'success'], 200);
         } catch (\Throwable $th) {
             return response()->json(['message' => 'Failed to fetch branches', 'status' => 'error'], 500);
@@ -344,5 +359,18 @@ class InvestorController extends Controller
             DB::rollBack();
             return back()->withErrors(['error' => $th->getMessage()]);
         }
+    }
+
+    public function returnDocument(InvestorHasDocument $document)
+    {
+        $path = $document->file_path;
+
+        if (!Storage::disk('local')->exists($path)) {
+            abort(404, 'File not found.');
+        }
+
+        $fullPath = Storage::disk('local')->path($path);
+
+        return response()->file($fullPath);
     }
 }

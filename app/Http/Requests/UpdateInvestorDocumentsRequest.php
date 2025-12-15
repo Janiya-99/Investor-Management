@@ -34,3 +34,4 @@ class UpdateInvestorDocumentsRequest extends FormRequest
         ];
     }
 }
+

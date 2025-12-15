@@ -71,7 +71,7 @@ class RolePermissionSeeder extends Seeder
             'products.edit',
         ]);
 
-        $manager = Role::create(['name' => 'Manager', 'guard_name' => 'web']);
+        $manager = Role::create(['name' => 'Investor', 'guard_name' => 'web']);
         $manager->givePermissionTo([
             'investors.view',
             'investors.create',

@@ -6,7 +6,11 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InvestorController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\InvestmentController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\InvestmentLogController;
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\InterestScheduleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,9 +42,18 @@ Route::middleware(['auth'])->group(function () {
     Route::put('investors/documents', [InvestorController::class, 'updateDocuments'])->name('investors.documents.update');
     Route::get('investors/bank-details', [InvestorController::class, 'bankDetailsPage'])->name('investors.banks.edit');
     Route::put('investors/bank-details', [InvestorController::class, 'updateBankDetails'])->name('investors.banks.update');
+    Route::put('investors/bank-details', [InvestorController::class, 'updateBankDetails'])->name('investors.banks.update');
+    Route::get('/documents/{document}/view', [InvestorController::class, 'returnDocument'])->name('documents.returnDocument');
+
     Route::resource('investors',InvestorController::class)->names('investors');
 
     Route::resource('products',ProductController::class)->names('products');
+
+    
+    Route::resource('investments', InvestmentController::class)->names('investments');
+    Route::resource('payments', PaymentController::class)->names('payments');
+    Route::resource('interest-schedules', InterestScheduleController::class)->names('interest-schedules');
+    Route::get('investment-logs', [InvestmentLogController::class, 'index'])->name('investment-logs.index');
 
     Route::resource('roles',\App\Http\Controllers\RoleController::class)->names('roles');
 
