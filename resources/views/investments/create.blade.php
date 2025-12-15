@@ -218,7 +218,7 @@
                         <thead class="table-light">
                         <tr>
                             <th>#</th>
-                            <th>Amount</th>
+                            <th>Capital Amount</th>
                             <th>Interest</th>
                         </tr>
                         </thead>
@@ -239,6 +239,8 @@
 
 @section('scripts')
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <!-- Include SweetAlert from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.all.min.js" aria-hidden="true"></script>
 
     <script>
         $(document).ready(function () {

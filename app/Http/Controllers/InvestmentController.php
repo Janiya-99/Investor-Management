@@ -65,11 +65,11 @@ class InvestmentController extends Controller
 
             Investment::create($data);
 
-            return redirect()->route('investments.index')->with('success', 'Investment created successfully.');
+            return response()->json(['message' => 'Investment created successfully.', 'status' => 'success', 'next_path' => route('investments.index')], 200);
         } catch (\Throwable $th) {
             Log::error('Failed to create investment', ['error' => $th->getMessage()]);
 
-            return redirect()->back()->withInput()->with('error', 'Unable to create investment. Please try again.');
+            return response()->json(['message' => 'Unable to create investment. Please try again.', 'status' => 'error'], 500);
         }
     }
 
@@ -107,11 +107,11 @@ class InvestmentController extends Controller
 
             $investment->update($data);
 
-            return redirect()->route('investments.index')->with('success', 'Investment updated successfully.');
+            return response()->json(['message' => 'Investment updated successfully.', 'status' => 'success', 'next_path' => route('investments.index')], 200);
         } catch (\Throwable $th) {
             Log::error('Failed to update investment', ['investment_id' => $investment->id, 'error' => $th->getMessage()]);
 
-            return redirect()->back()->withInput()->with('error', 'Unable to update investment. Please try again.');
+            return response()->json(['message' => 'Unable to update investment. Please try again.', 'status' => 'error'], 500);
         }
     }
 
