@@ -120,8 +120,10 @@
 
     $("#submitFormBtn").click(function() {
 
-        $('.spinner-border').show();
-        $('#submitFormBtn').hide();
+        var $btn = $(this);
+        var originalText = $btn.html();
+        $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+
         // Clear previous error messages and styling
         // $('.text-danger').remove();
         $('.is-invalid').removeClass('is-invalid');
@@ -156,7 +158,6 @@
                         buttonsStyling: false,
                         showCloseButton: true
                     }).then(() => {
-                        $('.spinner-border').hide();
                         window.location.href = response.next_path;
                     });
                 } else if (response.next) {
@@ -181,7 +182,6 @@
                             response.next_attribute + '="' + response.next_value +
                             '">Next Process - ' + response.next_process_name + '</a>'
                     }).then(() => {
-                        $('.spinner-border').hide();
                         location.reload();
                     });
 
@@ -203,15 +203,13 @@
                         buttonsStyling: false,
                         showCloseButton: true
                     }).then(() => {
-                        $('.spinner-border').hide();
                         location.reload();
                     });
                 }
 
             },
             error: function(xhr, status, error) {
-                $('.spinner-border').hide();
-                $('#submitFormBtn').show();
+                $btn.prop('disabled', false).html(originalText);
             if (xhr.status === 422) {
                 var errors = xhr.responseJSON.errors;
                 if (errors) {
