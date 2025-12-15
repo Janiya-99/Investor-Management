@@ -216,21 +216,26 @@
                     let displayAmount;
 
                     if (type === 'simple') {
-                        interest = amount * rate;
+
+                        // Simple interest: capital never changes
                         displayAmount = amount;
+                        interest = amount * rate;
+
                     } else {
-                        interest = currentAmount * rate;
-                        currentAmount += interest;
-                        displayAmount = currentAmount;
+
+                        // Compound interest
+                        displayAmount = currentAmount;          // show starting capital
+                        interest = currentAmount * rate;         // calculate interest
+                        currentAmount = currentAmount + interest; // compound AFTER display
                     }
 
                     tbody.append(`
-                <tr>
-                    <td>${i}</td>
-                    <td>${displayAmount.toFixed(2)}</td>
-                    <td>${interest.toFixed(2)}</td>
-                </tr>
-            `);
+                        <tr>
+                            <td>${i}</td>
+                            <td>${displayAmount.toFixed(2)}</td>
+                            <td>${interest.toFixed(2)}</td>
+                        </tr>
+                    `);
                 }
             }
 
