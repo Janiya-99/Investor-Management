@@ -6,8 +6,10 @@ use App\Http\Requests\StoreInterestScheduleRequest;
 use App\Http\Requests\UpdateInterestScheduleRequest;
 use App\Models\InterestSchedule;
 use App\Models\Investment;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class InterestScheduleController extends Controller
 {
@@ -22,7 +24,7 @@ class InterestScheduleController extends Controller
                 ->paginate(15);
 
             return view('interest-schedules.index', compact('schedules'));
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             Log::error('Failed to load interest schedules', ['error' => $th->getMessage()]);
 
             return redirect()->back()->with('error', 'Unable to load interest schedules. Please try again.');
@@ -42,7 +44,7 @@ class InterestScheduleController extends Controller
             return view('interest-schedules.create', [
                 'investments' => $investments,
             ]);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             Log::error('Failed to load interest schedule form', ['error' => $th->getMessage()]);
 
             return redirect()->back()->with('error', 'Unable to load interest schedule form. Please try again.');
@@ -64,7 +66,7 @@ class InterestScheduleController extends Controller
             InterestSchedule::create($data);
 
             return redirect()->route('interest-schedules.index')->with('success', 'Interest schedule created successfully.');
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             Log::error('Failed to create interest schedule', ['error' => $th->getMessage()]);
 
             return redirect()->back()->withInput()->with('error', 'Unable to create interest schedule. Please try again.');
@@ -85,7 +87,7 @@ class InterestScheduleController extends Controller
                 'interestSchedule' => $interestSchedule,
                 'investments' => $investments,
             ]);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             Log::error('Failed to load interest schedule edit form', ['schedule_id' => $interestSchedule->id, 'error' => $th->getMessage()]);
 
             return redirect()->back()->with('error', 'Unable to load interest schedule for editing. Please try again.');
@@ -106,7 +108,7 @@ class InterestScheduleController extends Controller
             $interestSchedule->update($data);
 
             return redirect()->route('interest-schedules.index')->with('success', 'Interest schedule updated successfully.');
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             Log::error('Failed to update interest schedule', ['schedule_id' => $interestSchedule->id, 'error' => $th->getMessage()]);
 
             return redirect()->back()->withInput()->with('error', 'Unable to update interest schedule. Please try again.');
@@ -122,14 +124,15 @@ class InterestScheduleController extends Controller
             $interestSchedule->delete();
 
             return redirect()->route('interest-schedules.index')->with('success', 'Interest schedule deleted successfully.');
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             Log::error('Failed to delete interest schedule', ['schedule_id' => $interestSchedule->id, 'error' => $th->getMessage()]);
 
             return redirect()->back()->with('error', 'Unable to delete interest schedule. Please try again.');
         }
     }
+
     /**
-     * Generate interest schedule for an investment.
+     * Generate an interest schedule for an investment.
      */
     public static function generateForInvestment(Investment $investment, array $data)
     {
@@ -138,11 +141,11 @@ class InterestScheduleController extends Controller
         $periodType = $data['period_type'];
         $calculationType = $data['interest_calculation_type'];
         $currentCapital = $data['investment_amount'];
-        $startDate = \Carbon\Carbon::parse($data['start_date']);
+        $startDate = Carbon::parse($data['start_date']);
 
         for ($i = 1; $i <= $period; $i++) {
             $dueDate = $startDate->copy();
-            
+
             // Calculate due date based on period type
             switch ($periodType) {
                 case 'days':

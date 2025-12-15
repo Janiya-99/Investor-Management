@@ -4,14 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreInvestmentRequest;
 use App\Http\Requests\UpdateInvestmentRequest;
-use App\Http\Controllers\InterestScheduleController;
-use App\Models\InterestSchedule;
-
 use App\Models\Investment;
+use App\Models\InvestmentLog;
 use App\Models\Investor;
 use App\Models\InvestorHasBankDetails;
 use App\Models\Product;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -76,6 +73,17 @@ class InvestmentController extends Controller
 
             // Logic to add the details to Interest Schedule
             InterestScheduleController::generateForInvestment($investment, $data);
+
+            // Create Investment Log
+            InvestmentLog::create([
+                'investment_id' => $investment->id,
+                'payment_id' => null,
+                'type' => 'capital',
+                'amount' => $data['investment_amount'],
+                'log_date' => now(),
+                'description' => 'Initial investment created',
+                'created_by' => Auth::id(),
+            ]);
 
             DB::commit();
 
