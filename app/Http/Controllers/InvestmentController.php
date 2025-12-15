@@ -4,14 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreInvestmentRequest;
 use App\Http\Requests\UpdateInvestmentRequest;
+use App\Models\InterestSchedule;
+use App\Models\Investment;
 use App\Models\Investor;
 use App\Models\InvestorHasBankDetails;
-use App\Models\Investment;
 use App\Models\Product;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class InvestmentController extends Controller
 {
@@ -26,7 +29,7 @@ class InvestmentController extends Controller
                 ->paginate(15);
 
             return view('investments.index', compact('investments'));
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             Log::error('Failed to load investments list', ['error' => $th->getMessage()]);
 
             return redirect()->back()->with('error', 'Unable to load investments right now. Please try again.');
@@ -48,7 +51,7 @@ class InvestmentController extends Controller
                 'products' => $products,
                 'bankDetails' => $bankDetails,
             ]);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             Log::error('Failed to load investment create form', ['error' => $th->getMessage()]);
 
             return redirect()->back()->with('error', 'Unable to load investment form. Please try again.');
@@ -67,10 +70,54 @@ class InvestmentController extends Controller
             $data['created_by'] = Auth::id();
             $data['last_updated_by'] = Auth::id();
 
-            Investment::create($data);
+            $investment = Investment::create($data);
 
             // Logic to add the details to Interest Schedule
+            $rate = $data['interest_rate'] / 100;
+            $period = (int)$data['period'];
+            $periodType = $data['period_type'];
+            $calculationType = $data['interest_calculation_type'];
+            $currentCapital = $data['investment_amount'];
+            $startDate = Carbon::parse($data['start_date']);
 
+            for ($i = 1; $i <= $period; $i++) {
+                $dueDate = $startDate->copy();
+
+                // Calculate due date based on period type
+                switch ($periodType) {
+                    case 'days':
+                        $dueDate->addDays($i);
+                        break;
+                    case 'weeks':
+                        $dueDate->addWeeks($i);
+                        break;
+                    case 'months':
+                        $dueDate->addMonths($i);
+                        break;
+                    case 'years':
+                        $dueDate->addYears($i);
+                        break;
+                }
+
+                $interestAmount = $currentCapital * $rate;
+                $totalAmount = $currentCapital + $interestAmount;
+
+                InterestSchedule::create([
+                    'investment_id' => $investment->id,
+                    'due_date' => $dueDate,
+                    'interest_amount' => $interestAmount,
+                    'capital_amount' => $currentCapital,
+                    'total_amount' => $totalAmount,
+                    'status' => 'pending',
+                    'created_by' => Auth::id(),
+                    'last_updated_by' => Auth::id(),
+                ]);
+
+                // Update capital if compound interest, otherwise it stays the same (simple)
+                if ($calculationType === 'compound') {
+                    $currentCapital = $totalAmount;
+                }
+            }
 
             DB::commit();
 
@@ -113,7 +160,7 @@ class InvestmentController extends Controller
                 'products' => $products,
                 'bankDetails' => $bankDetails,
             ]);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             Log::error('Failed to load investment edit form', ['error' => $th->getMessage()]);
 
             return redirect()->back()->with('error', 'Unable to load investment for editing. Please try again.');
@@ -132,7 +179,7 @@ class InvestmentController extends Controller
             $investment->update($data);
 
             return response()->json(['message' => 'Investment updated successfully.', 'status' => 'success', 'next_path' => route('investments.index')], 200);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             Log::error('Failed to update investment', ['investment_id' => $investment->id, 'error' => $th->getMessage()]);
 
             return response()->json(['message' => 'Unable to update investment. Please try again.', 'status' => 'error'], 500);
@@ -148,7 +195,7 @@ class InvestmentController extends Controller
             $investment->delete();
 
             return redirect()->route('investments.index')->with('success', 'Investment deleted successfully.');
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             Log::error('Failed to delete investment', ['investment_id' => $investment->id, 'error' => $th->getMessage()]);
 
             return redirect()->back()->with('error', 'Unable to delete investment. Please try again.');
