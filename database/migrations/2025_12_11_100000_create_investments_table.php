@@ -43,7 +43,7 @@ return new class extends Migration
             $table->enum('status', ['draft', 'active', 'closed', 'cancelled'])->default('active');
             $table->text('notes')->nullable();
 
-            $table->foreignId('interest_schedule_id')->nullable()->constrained('interest_schedules');
+//            $table->foreignId('interest_schedule_id')->nullable()->constrained('interest_schedules');
 
             $table->string('approved_date_time', 45)->nullable();
             $table->foreignId('approved_by')->nullable()->constrained('users');
