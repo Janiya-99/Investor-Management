@@ -128,5 +128,56 @@ class InterestScheduleController extends Controller
             return redirect()->back()->with('error', 'Unable to delete interest schedule. Please try again.');
         }
     }
+    /**
+     * Generate interest schedule for an investment.
+     */
+    public static function generateForInvestment(Investment $investment, array $data)
+    {
+        $rate = $data['interest_rate'] / 100;
+        $period = (int)$data['period'];
+        $periodType = $data['period_type'];
+        $calculationType = $data['interest_calculation_type'];
+        $currentCapital = $data['investment_amount'];
+        $startDate = \Carbon\Carbon::parse($data['start_date']);
+
+        for ($i = 1; $i <= $period; $i++) {
+            $dueDate = $startDate->copy();
+            
+            // Calculate due date based on period type
+            switch ($periodType) {
+                case 'days':
+                    $dueDate->addDays($i);
+                    break;
+                case 'weeks':
+                    $dueDate->addWeeks($i);
+                    break;
+                case 'months':
+                    $dueDate->addMonths($i);
+                    break;
+                case 'years':
+                    $dueDate->addYears($i);
+                    break;
+            }
+
+            $interestAmount = $currentCapital * $rate;
+            $totalAmount = $currentCapital + $interestAmount;
+
+            InterestSchedule::create([
+                'investment_id' => $investment->id,
+                'due_date' => $dueDate,
+                'interest_amount' => $interestAmount,
+                'capital_amount' => $currentCapital,
+                'total_amount' => $totalAmount,
+                'status' => 'pending',
+                'created_by' => Auth::id(),
+                'last_updated_by' => Auth::id(),
+            ]);
+
+            // Update capital if compound interest, otherwise it stays the same (simple)
+            if ($calculationType === 'compound') {
+                $currentCapital = $totalAmount;
+            }
+        }
+    }
 }
 
