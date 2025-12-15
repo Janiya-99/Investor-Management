@@ -23,13 +23,13 @@
                     </a>
                 </div>
                 <div class="card-body">
-                    @if(session('success'))
+                    @if (session('success'))
                         <div class="alert alert-success">{{ session('success') }}</div>
                     @endif
-                    @if($errors->any())
+                    @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul class="mb-0">
-                                @foreach($errors->all() as $error)
+                                @foreach ($errors->all() as $error)
                                     <li>{{ $error }}</li>
                                 @endforeach
                             </ul>
@@ -38,29 +38,31 @@
 
                     <form class="row g-3 mb-4" method="GET" action="{{ route('investors.documents.edit') }}">
                         <div class="col-md-6 form-group">
-                            <label class="form-label required" data-bs-toggle="tooltip" title="Required">Select Investor</label>
-                            <select name="investor_id" class="form-select investor-select" onchange="this.form.submit()" required>
+                            <label class="form-label required" data-bs-toggle="tooltip" title="Required">Select
+                                Investor</label>
+                            <select name="investor_id" class="form-select investor-select" onchange="this.form.submit()"
+                                required>
                                 <option value="">Choose investor</option>
-                                @foreach($investors as $item)
+                                @foreach ($investors as $item)
                                     <option value="{{ $item->id }}" @selected(optional($investor)->id == $item->id)>
                                         {{ $item->full_name }} ({{ $item->email }})
                                     </option>
                                 @endforeach
                             </select>
                         </div>
-                        @if($investor)
+                        @if ($investor)
                             <div class="col-md-6 d-flex align-items-end">
                                 <div class="text-muted">Currently editing: <strong>{{ $investor->full_name }}</strong></div>
                             </div>
                         @endif
                     </form>
 
-                    @if($investor)
-                        @if($investor->documents->count())
+                    @if ($investor)
+                        @if ($investor->documents->count())
                             <div class="mb-4">
                                 <h6 class="text-muted mb-3">Existing Documents</h6>
                                 <div class="row g-3">
-                                    @foreach($investor->documents as $doc)
+                                    @foreach ($investor->documents as $doc)
                                         <div class="col-md-6 col-lg-4">
                                             <div class="border rounded p-3 h-100">
                                                 <div class="d-flex align-items-center gap-2 mb-2">
@@ -68,17 +70,22 @@
                                                         <i class="ph-duotone ph-file-text"></i>
                                                     </div>
                                                     <div>
-                                                        <div class="fw-semibold">{{ $doc->description ?? 'No description' }}</div>
+                                                        <div class="fw-semibold">{{ $doc->description ?? 'No description' }}
+                                                        </div>
                                                         <small class="text-muted">{{ $doc->document_path }}</small>
                                                     </div>
                                                 </div>
                                                 <div class="d-flex justify-content-between align-items-center">
                                                     <small class="text-muted">
-                                                        Uploaded {{ optional($doc->uploaded_at)->format('Y-m-d') ?? $doc->created_at->format('Y-m-d') }}
+                                                        Uploaded
+                                                        {{ optional($doc->uploaded_at)->format('Y-m-d') ?? $doc->created_at->format('Y-m-d') }}
                                                     </small>
-                                                    <a class="btn btn-sm btn-outline-primary" target="_blank" href="{{ Storage::url($doc->file_path) }}">
+
+                                                    <a class="btn btn-sm btn-outline-primary"
+                                                        href="{{ route('documents.returnDocument', $doc->id) }}" target="_blank">
                                                         <i class="ph-duotone ph-download-simple"></i> View
                                                     </a>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -87,7 +94,8 @@
                             </div>
                         @endif
 
-                        <form action="{{ route('investors.documents.update') }}" method="POST" enctype="multipart/form-data" id="submitForm">
+                        <form action="{{ route('investors.documents.update') }}" method="POST"
+                            enctype="multipart/form-data" id="submitForm">
                             @csrf
                             @method('PUT')
                             <input type="hidden" name="investor_id" value="{{ $investor->id }}">
@@ -108,7 +116,8 @@
                                         </div>
                                         <div class="mb-3 col-md-5 form-group">
                                             <label class="form-label">Upload Document</label>
-                                            <input type="file" class="form-control" name="documents[0][document_path]" accept=".jpg,.jpeg,.png,.pdf">
+                                            <input type="file" class="form-control" name="documents[0][document_path]"
+                                                accept=".jpg,.jpeg,.png,.pdf">
                                         </div>
                                         <div class="mb-3 col-md-1 d-flex justify-content-end">
                                             <button type="button" class="btn btn-danger remove-document mt-md-4 mt-2">
@@ -135,42 +144,45 @@
 @endsection
 
 @section('scripts')
-<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        let docIndex = 1;
-        const wrapper = document.getElementById('documentsWrapper');
-        const investorSelect = document.querySelector('.investor-select');
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let docIndex = 1;
+            const wrapper = document.getElementById('documentsWrapper');
+            const investorSelect = document.querySelector('.investor-select');
 
-        if (investorSelect) {
-            new Choices(investorSelect, { searchEnabled: true, itemSelectText: '', shouldSort: false });
-        }
+            if (investorSelect) {
+                new Choices(investorSelect, {
+                    searchEnabled: true,
+                    itemSelectText: '',
+                    shouldSort: false
+                });
+            }
 
-        document.getElementById('addDocument').addEventListener('click', function () {
-            const first = wrapper.querySelector('.document-item');
-            const clone = first.cloneNode(true);
+            document.getElementById('addDocument').addEventListener('click', function() {
+                const first = wrapper.querySelector('.document-item');
+                const clone = first.cloneNode(true);
 
-            clone.querySelectorAll('input, textarea').forEach(function (el) {
-                el.value = '';
-                const name = el.getAttribute('name');
-                if (name) {
-                    el.setAttribute('name', name.replace(/\d+/, docIndex));
-                }
+                clone.querySelectorAll('input, textarea').forEach(function(el) {
+                    el.value = '';
+                    const name = el.getAttribute('name');
+                    if (name) {
+                        el.setAttribute('name', name.replace(/\d+/, docIndex));
+                    }
+                });
+
+                wrapper.appendChild(clone);
+                docIndex++;
             });
 
-            wrapper.appendChild(clone);
-            docIndex++;
-        });
-
-        wrapper.addEventListener('click', function (e) {
-            if (e.target.closest('.remove-document')) {
-                const items = wrapper.querySelectorAll('.document-item');
-                if (items.length > 1) {
-                    e.target.closest('.document-item').remove();
+            wrapper.addEventListener('click', function(e) {
+                if (e.target.closest('.remove-document')) {
+                    const items = wrapper.querySelectorAll('.document-item');
+                    if (items.length > 1) {
+                        e.target.closest('.document-item').remove();
+                    }
                 }
-            }
+            });
         });
-    });
-</script>
+    </script>
 @endsection
-

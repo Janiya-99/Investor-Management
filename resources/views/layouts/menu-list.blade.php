@@ -125,6 +125,41 @@
 </li>
 @endcanany
 
+{{-- ===========================
+    INVESTMENT OPERATIONS
+=========================== --}}
+<li class="pc-item pc-caption">
+  <label>Investments & Payments</label>
+</li>
+
+<li class="pc-item">
+  <a href="{{ route('investments.index') }}" class="pc-link">
+      <span class="pc-micon"><i class="ph-duotone ph-currency-circle-dollar"></i></span>
+      <span class="pc-mtext">Investments</span>
+  </a>
+</li>
+
+<li class="pc-item">
+  <a href="{{ route('payments.index') }}" class="pc-link">
+      <span class="pc-micon"><i class="ph-duotone ph-credit-card"></i></span>
+      <span class="pc-mtext">Payments</span>
+  </a>
+</li>
+
+<li class="pc-item">
+  <a href="{{ route('interest-schedules.index') }}" class="pc-link">
+      <span class="pc-micon"><i class="ph-duotone ph-calendar-check"></i></span>
+      <span class="pc-mtext">Interest Schedules</span>
+  </a>
+</li>
+
+<li class="pc-item">
+  <a href="{{ route('investment-logs.index') }}" class="pc-link">
+      <span class="pc-micon"><i class="ph-duotone ph-notebook"></i></span>
+      <span class="pc-mtext">Investment Logs</span>
+  </a>
+</li>
+
 
 {{-- ===========================
         SYSTEM

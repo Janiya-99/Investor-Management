@@ -76,6 +76,23 @@ class StoreInvestorRequest extends FormRequest
 
             'status.required' => 'The status field is required.',
             'status.boolean' => 'The status field must be true or false.',
+
+            'documents.*.description.required_with' => 'The document description is required when a document file is provided.',
+            'documents.*.document_path.required_with' => 'The document file is required when a document description is provided.',
+            'documents.*.description.max' => 'The document description may not be greater than 255 characters.',
+            'documents.*.document_path.file' => 'The document file must be a file.',
+            'documents.*.document_path.mimes' => 'The document file must be a file of type: jpg, jpeg, png, pdf.',
+            'documents.*.document_path.max' => 'The document file may not be greater than 2MB.',
+
+            'banks.required' => 'At least one bank detail is required.',
+            'banks.*.bank_id.required' => 'The bank field is required for each bank detail.',
+            'banks.*.bank_id.exists' => 'The selected bank does not exist.',
+            'banks.*.bank_branch_id.required' => 'The bank branch field is required for each bank detail.',
+            'banks.*.bank_branch_id.exists' => 'The selected bank branch does not exist.',
+            'banks.*.account_number.required' => 'The account number field is required for each bank detail.',
+            'banks.*.account_number.max' => 'The account number may not be greater than 50 characters.',
+            'banks.*.account_name.required' => 'The account name field is required for each bank detail.',
+            'banks.*.account_name.max' => 'The account name may not be greater than 255 characters.',
         ];
     }
 }
