@@ -77,6 +77,20 @@
                                 </select>
                             </div>
 
+                            {{-- Investor Bank Details --}}
+                            <div class="col-md-6 mb-3 form-group">
+                                <label class="form-label">Payout Bank Account</label>
+                                <select name="investor_bank_details_id" class="form-select js-choice-search">
+                                    <option value="">Select Bank Account</option>
+                                    @foreach ($bankDetails as $detail)
+                                        <option value="{{ $detail->id }}"
+                                                @selected(old('investor_bank_details_id', $investment->investor_bank_details_id ?? '') == $detail->id)>
+                                            {{ $detail->bank_name }} - {{ $detail->account_number }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
                             {{-- Product --}}
                             <div class="col-md-6 mb-3 form-group">
                                 <label class="form-label">Product</label>
@@ -88,7 +102,8 @@
                                                 data-interest-rate="{{ $product->interest_rate }}"
                                                 data-period="{{ $product->period }}"
                                                 data-period-type="{{ $product->period_type }}"
-                                                data-interest-calculation-type="{{ $product->interest_calculation_type }}">
+                                                data-interest-calculation-type="{{ $product->interest_calculation_type }}"
+                                                data-capital-withdrawal-notice-period="{{$product->capital_withdrawal_notice_period}}">
                                             {{ $product->name }}
                                         </option>
                                     @endforeach
@@ -100,7 +115,21 @@
                                 <label class="form-label required">Investment Amount</label>
                                 <input type="number" step="0.01" name="investment_amount" class="form-control"
                                        value="{{ old('investment_amount', $investment->investment_amount ?? '') }}"
-                                       required>
+                                       >
+                            </div>
+
+                            {{-- Penalty Rate --}}
+                            <div class="col-md-4 mb-3 form-group">
+                                <label class="form-label">Penalty Rate (%)</label>
+                                <input type="number" step="0.0001" name="penalty_rate" class="form-control"
+                                       value="{{ old('penalty_rate', $investment->penalty_rate ?? '0') }}">
+                            </div>
+
+                            {{-- Capital Withdrawal Notice Period --}}
+                            <div class="col-md-4 mb-3 form-group">
+                                <label class="form-label required">Withdrawal Notice (Days)</label>
+                                <input type="number" name="capital_withdrawal_notice_period" class="form-control"
+                                       value="{{ old('capital_withdrawal_notice_period', $investment->capital_withdrawal_notice_period ?? '0') }}" required>
                             </div>
 
                             {{-- Rate --}}
@@ -148,11 +177,11 @@
                                 </div>
                             </div>
 
-                            {{-- Registration Date --}}
+                            {{-- Start Date --}}
                             <div class="col-md-6 mb-3 form-group">
-                                <label class="form-label required">Registration Date</label>
-                                <input type="date" name="registration_date" class="form-control"
-                                       value="{{ old('registration_date', $investment->registration_date ?? date('Y-m-d')) }}" required>
+                                <label class="form-label required">Start Date</label>
+                                <input type="date" name="start_date" class="form-control"
+                                       value="{{ old('start_date', $investment->start_date ?? date('Y-m-d')) }}" required>
                             </div>
 
                             {{-- Status --}}
@@ -300,6 +329,11 @@
                 }
                 if (selected.data('interest-calculation-type')) {
                     $('select[name="interest_calculation_type"]').val(selected.data('interest-calculation-type'));
+                }
+                if (selected.data('capital-withdrawal-notice-period') !== undefined) {
+                    $('input[name="capital_withdrawal_notice_period"]').val(
+                        selected.data('capital-withdrawal-notice-period')
+                    );
                 }
 
                 setTimeout(generateSchedule, 200);

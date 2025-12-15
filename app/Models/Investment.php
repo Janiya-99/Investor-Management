@@ -16,6 +16,7 @@ class Investment extends Model
         'investor_bank_details_id',
         'investment_amount',
         'interest_rate',
+        'interest_calculation_type',
         'period_type',
         'period',
         'start_date',
