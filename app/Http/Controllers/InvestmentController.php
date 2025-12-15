@@ -134,7 +134,7 @@ class InvestmentController extends Controller
                 'error' => $th->getMessage(),
                 'trace' => $th->getTraceAsString(),
                 'user_id' => Auth::id(),
-                'data' => $request->except(['password', 'token']) // Exclude sensitive data if any
+                'data' => $request->except(['password', 'token'])
             ]);
 
             return response()->json([
