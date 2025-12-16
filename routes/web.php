@@ -52,6 +52,7 @@ Route::middleware(['auth'])->group(function () {
     
     Route::resource('investments', InvestmentController::class)->names('investments');
     Route::resource('payments', PaymentController::class)->names('payments');
+    Route::get('interest-schedules/investor/{investorId}', [InterestScheduleController::class, 'getInvestorSchedules'])->name('interest-schedules.investor');
     Route::resource('interest-schedules', InterestScheduleController::class)->names('interest-schedules');
     Route::get('investment-logs', [InvestmentLogController::class, 'index'])->name('investment-logs.index');
 

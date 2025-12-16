@@ -6,7 +6,10 @@ use App\Http\Requests\StoreInterestScheduleRequest;
 use App\Http\Requests\UpdateInterestScheduleRequest;
 use App\Models\InterestSchedule;
 use App\Models\Investment;
+use App\Models\Investor;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Throwable;
@@ -16,19 +19,83 @@ class InterestScheduleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $schedules = InterestSchedule::with(['investment.investor', 'investment.product'])
-                ->latest('due_date')
-                ->paginate(15);
+            if ($request->ajax()) {
+                $investors = Investor::whereHas('investments.interestSchedules')
+                    ->withCount(['investments as total_schedules_count' => function ($query) {
+                        $query->join('interest_schedules', 'investments.id', '=', 'interest_schedules.investment_id');
+                    }])
+                    ->with(['investments.interestSchedules' => function ($query) {
+                        $query->selectRaw('sum(total_amount) as pending_amount, investment_id')
+                            ->where('status', 'pending')
+                            ->groupBy('investment_id');
+                    }]);
 
-            return view('interest-schedules.index', compact('schedules'));
+                return DataTables::of($investors)
+                    ->addIndexColumn()
+                    ->addColumn('total_pending_amount', function ($row) {
+                        $total = $row->investments->flatMap->interestSchedules->sum('pending_amount');
+                        return number_format($total, 2);
+                    })
+                    ->addColumn('action', function ($row) {
+                        return '<button class="btn btn-sm btn-outline-primary btn-details" data-id="' . $row->id . '">View Schedules</button>';
+                    })
+                    ->make(true);
+            }
+
+            return view('interest-schedules.index');
         } catch (Throwable $th) {
             Log::error('Failed to load interest schedules', ['error' => $th->getMessage()]);
-
             return redirect()->back()->with('error', 'Unable to load interest schedules. Please try again.');
         }
+    }
+
+    public function getInvestorSchedules(Request $request, $investorId)
+    {
+        $schedules = InterestSchedule::whereHas('investment', function ($query) use ($investorId) {
+            $query->where('investor_id', $investorId);
+        })->with(['investment.product']);
+
+        return DataTables::of($schedules)
+            ->editColumn('investment_id', function ($row) {
+                return '#' . $row->investment_id;
+            })
+            ->addColumn('product_name', function ($row) {
+                return $row->investment->product->name ?? 'N/A';
+            })
+            ->editColumn('due_date', function ($row) {
+                return optional($row->due_date)->format('Y-m-d');
+            })
+            ->editColumn('interest_amount', function ($row) {
+                return number_format($row->interest_amount, 2);
+            })
+            ->editColumn('capital_amount', function ($row) {
+                return number_format($row->capital_amount, 2);
+            })
+            ->editColumn('total_amount', function ($row) {
+                return number_format($row->total_amount, 2);
+            })
+            ->editColumn('status', function ($row) {
+                 $statusClass = match ($row->status) {
+                    'paid' => 'bg-success-subtle text-success',
+                    'overdue' => 'bg-danger-subtle text-danger',
+                    'scheduled' => 'bg-info-subtle text-info',
+                    'cancelled' => 'bg-secondary-subtle text-secondary',
+                    default => 'bg-warning-subtle text-warning',
+                };
+                return '<span class="badge rounded-pill ' . $statusClass . '">' . ucfirst($row->status) . '</span>';
+            })
+            ->addColumn('action', function ($row) {
+                 $editBtn = '<a href="' . route('interest-schedules.edit', $row->id) . '" class="btn btn-sm btn-outline-primary me-1">Edit</a>';
+                 $deleteBtn = '<form action="' . route('interest-schedules.destroy', $row->id) . '" method="POST" class="d-inline" onsubmit="return confirm(\'Delete this schedule?\')">' .
+                     csrf_field() . method_field('DELETE') . 
+                     '<button type="submit" class="btn btn-sm btn-outline-danger">Delete</button></form>';
+                 return '<div class="btn-group btn-group-sm">' . $editBtn . $deleteBtn . '</div>';
+            })
+            ->rawColumns(['status', 'action'])
+            ->make(true);
     }
 
     /**
