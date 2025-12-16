@@ -30,7 +30,7 @@
                                 <th>Rate (%)</th>
                                 <th>Start</th>
                                 <th>Status</th>
-                                <th class="text-end">Actions</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -43,7 +43,7 @@
                                 <th>Rate (%)</th>
                                 <th>Start</th>
                                 <th>Status</th>
-                                <th class="text-end">Actions</th>
+                                <th>Actions</th>
                             </tr>
                         </tfoot>
                     </table>
@@ -70,7 +70,7 @@
                     { data: 'interest_rate', name: 'interest_rate' },
                     { data: 'start_date', name: 'start_date' },
                     { data: 'status', name: 'status' },
-                    { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-end' }
+                    { data: 'action', name: 'action', orderable: false, searchable: false }
                 ]
             });
         });

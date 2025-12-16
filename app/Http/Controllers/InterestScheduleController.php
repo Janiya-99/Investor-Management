@@ -88,11 +88,9 @@ class InterestScheduleController extends Controller
                 return '<span class="badge rounded-pill ' . $statusClass . '">' . ucfirst($row->status) . '</span>';
             })
             ->addColumn('action', function ($row) {
-                 $editBtn = '<a href="' . route('interest-schedules.edit', $row->id) . '" class="btn btn-sm btn-outline-primary me-1">Edit</a>';
-                 $deleteBtn = '<form action="' . route('interest-schedules.destroy', $row->id) . '" method="POST" class="d-inline" onsubmit="return confirm(\'Delete this schedule?\')">' .
-                     csrf_field() . method_field('DELETE') . 
-                     '<button type="submit" class="btn btn-sm btn-outline-danger">Delete</button></form>';
-                 return '<div class="btn-group btn-group-sm">' . $editBtn . $deleteBtn . '</div>';
+                 $editBtn = '<a href="' . route('interest-schedules.edit', $row->id) . '" class="btn btn-info btn-sm m-1"><i class="ti ti-pencil f-18"></i></a>';
+                 $deleteBtn = '<button class="btn btn-danger btn-sm m-1" onclick="handleDelete(\'' . route('interest-schedules.destroy', $row->id) . '\', { _token: \'' . csrf_token() . '\' })"><i class="ti ti-trash f-18"></i></button>';
+                 return $editBtn . $deleteBtn;
             })
             ->rawColumns(['status', 'action'])
             ->make(true);

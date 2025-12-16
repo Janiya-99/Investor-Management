@@ -49,8 +49,8 @@ class InvestmentController extends Controller
                        return '<span class="badge bg-light text-uppercase text-dark">' . $row->status . '</span>';
                     })
                     ->addColumn('action', function ($row) {
-                        $editBtn = '<a href="' . route('investments.edit', $row->id) . '" class="btn btn-sm btn-outline-primary me-1">Edit</a>';
-                        $deleteBtn = '<button class="btn btn-sm btn-outline-danger" onclick="handleDelete(\'' . route('investments.destroy', $row->id) . '\', { _token: \'' . csrf_token() . '\' })">Delete</button>';
+                        $editBtn = '<a href="' . route('investments.edit', $row->id) . '" class="btn btn-info btn-sm m-1"><i class="ti ti-pencil f-18"></i></a>';
+                        $deleteBtn = '<button class="btn btn-danger btn-sm m-1" onclick="handleDelete(\'' . route('investments.destroy', $row->id) . '\', { _token: \'' . csrf_token() . '\' })"><i class="ti ti-trash f-18"></i></button>';
                         return $editBtn . $deleteBtn;
                     })
                     ->rawColumns(['status', 'action'])
