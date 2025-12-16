@@ -34,6 +34,18 @@
                             </tr>
                         </thead>
                         <tbody></tbody>
+                        <tfoot>
+                            <tr>
+                                <th>#</th>
+                                <th>Investor</th>
+                                <th>Product</th>
+                                <th>Amount</th>
+                                <th>Rate (%)</th>
+                                <th>Start</th>
+                                <th>Status</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>

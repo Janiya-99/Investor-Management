@@ -4,6 +4,13 @@
 @section('breadcrumb-item', 'Investments')
 @section('breadcrumb-item-active', 'Logs')
 
+@section('css')
+    <!-- [Page specific CSS] start -->
+    <link rel="stylesheet" href="{{ URL::asset('build/css/plugins/dataTables.bootstrap5.min.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('build/css/plugins/buttons.bootstrap5.min.css') }}">
+    <!-- [Page specific CSS] end -->
+@endsection
+
 @section('content')
     <div class="row">
         <div class="col-12">
@@ -12,7 +19,7 @@
                     <h5 class="mb-0">Investment Logs</h5>
                 </div>
                 <div class="card-body table-responsive">
-                    <table class="table table-striped align-middle">
+                    <table id="logs-table" class="table table-striped align-middle table-bordered nowrap">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -24,29 +31,45 @@
                                 <th>Description</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @forelse ($logs as $log)
-                                <tr>
-                                    <td>{{ $log->id }}</td>
-                                    <td>#{{ $log->investment?->id ?? 'N/A' }}</td>
-                                    <td>{{ $log->investment?->investor?->full_name ?? 'N/A' }}</td>
-                                    <td class="text-capitalize">{{ $log->type }}</td>
-                                    <td>{{ number_format($log->amount, 2) }}</td>
-                                    <td>{{ optional($log->log_date)->format('Y-m-d') }}</td>
-                                    <td>{{ $log->description ?? '-' }}</td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="7" class="text-center text-muted">No logs found.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr>
+                                <th>#</th>
+                                <th>Investment</th>
+                                <th>Investor</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th>Description</th>
+                            </tr>
+                        </tfoot>
                     </table>
-                    <div class="mt-3">
-                        {{ $logs->links() }}
-                    </div>
                 </div>
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        $(document).ready(function() {
+            var table = $('#logs-table').DataTable({
+                dom: '<"top"lBf>rt<"bottom"ip><"clear">',
+                buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+                processing: true,
+                serverSide: true,
+                ajax: "{{ route('investment-logs.index') }}",
+                columns: [
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                    { data: 'investment_id', name: 'investment_id' },
+                    { data: 'investor_name', name: 'investment.investor.full_name' },
+                    { data: 'type', name: 'type' },
+                    { data: 'amount', name: 'amount' },
+                    { data: 'log_date', name: 'log_date' },
+                    { data: 'description', name: 'description' }
+                ],
+                order: [[5, 'desc']] // Sort by Date desc by default
+            });
+        });
+    </script>
 @endsection

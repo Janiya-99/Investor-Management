@@ -29,7 +29,16 @@
   - Standardized `InvestmentController` to return structured JSON responses with proper success notifications.
 
 - [x] **Transaction Handling**
+
   - Wrapped investment creation logic in Database Transactions (`DB::beginTransaction` / `DB::commit`) to ensure data integrity and rollback on failure.
+
+- [x] **Investment Log Controller**
+
+  - Implemented `InvestmentLogController` to handle investment log operations.
+
+- [x] **View edited with DataTables**
+
+  - Implemented the view with DataTables operations.
 
 ---
 
