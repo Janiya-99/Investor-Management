@@ -298,6 +298,15 @@
                 }
             });
 
+            // Use ResizeObserver to ensure table columns adjust when container size changes
+            var tableContainer = document.querySelector('#activity-logs-table_wrapper');
+            if (tableContainer) {
+                var resizeObserver = new ResizeObserver(function() {
+                    table.columns.adjust();
+                });
+                resizeObserver.observe(tableContainer);
+            }
+
             // Apply filters
             $('#applyFilters').on('click', function() {
                 table.draw();
