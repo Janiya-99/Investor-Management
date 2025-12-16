@@ -44,6 +44,10 @@
 
   - Edited interest schedule view to use DataTables operations and categorize according to the Investor.
 
+- [x] **Modified the logic to toggle dark and light modes**
+
+  - Modified the logic to toggle dark and light modes when clicked on dark mode it stays on that after reload of the fresh page.
+
 ---
 
 _Created by Amika | 2025-12-16_

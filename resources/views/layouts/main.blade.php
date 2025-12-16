@@ -24,9 +24,14 @@
     <body data-pc-preset="preset-1" data-pc-sidebar-theme="dark" data-pc-sidebar-caption="true" data-pc-direction="ltr"
         data-pc-theme="light">
         <script>
-            // Avoid flicker by setting theme immediately
-            if (localStorage.getItem('theme-mode') === 'dark') {
+            // Avoid flicker: check localStorage first, then system preference
+            var savedTheme = localStorage.getItem('theme-mode');
+            if (savedTheme === 'dark') {
                 document.body.setAttribute('data-pc-theme', 'dark');
+            } else if (!savedTheme) {
+                 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.body.setAttribute('data-pc-theme', 'dark');
+                 }
             }
         </script>
         @include('layouts.loader')
