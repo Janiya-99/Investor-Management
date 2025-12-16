@@ -9,6 +9,14 @@ use Yajra\DataTables\Facades\DataTables;
 
 class ProductController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:products.view', ['only' => ['index']]);
+        $this->middleware('permission:products.create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:products.edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:products.delete', ['only' => ['destroy']]);
+    }
+    
     /**
      * Display a listing of the resource.
      */
@@ -44,15 +52,6 @@ class ProductController extends Controller
             return response()->json(['message' => $th->getMessage(), 'status' => false], 500);
         }
     }
-    
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -67,14 +66,6 @@ class ProductController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage(), 'status' => false], 500);
         }
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Product $product)
-    {
-        //
     }
 
     /**

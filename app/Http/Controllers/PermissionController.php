@@ -8,6 +8,14 @@ use Yajra\DataTables\DataTables;
 
 class PermissionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:permissions.view', ['only' => ['index']]);
+        $this->middleware('permission:permissions.create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:permissions.edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:permissions.delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      */

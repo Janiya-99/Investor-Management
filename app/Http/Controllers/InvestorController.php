@@ -20,6 +20,14 @@ use Yajra\DataTables\DataTables;
 
 class InvestorController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:investors.view', ['only' => ['index', 'show', 'getBranchesByBank']]);
+        $this->middleware('permission:investors.create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:investors.edit', ['only' => ['edit', 'update', 'documentsPage', 'updateDocuments', 'bankDetailsPage', 'updateBankDetails', 'returnDocument']]);
+        $this->middleware('permission:investors.delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      */
