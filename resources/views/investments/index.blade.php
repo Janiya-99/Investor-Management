@@ -12,15 +12,24 @@
 @endsection
 
 @section('content')
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Investments</h5>
-                    <a href="{{ route('investments.create') }}" class="btn btn-primary">Add Investment</a>
-                </div>
-                <div class="card-body table-responsive">
-                    <table id="investments-table" class="table table-striped align-middle table-bordered nowrap">
+    <!-- [ Main Content ] start -->
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+
+            <!-- Card Header (Right-aligned button like the other table) -->
+            <div class="card-header table-card-header text-end">
+                <a href="{{ route('investments.create') }}" class="btn btn-primary add-new">
+                    Add Investment
+                </a>
+            </div>
+
+            <!-- Card Body -->
+            <div class="card-body">
+                <div class="dt-responsive table-responsive">
+
+                    <table id="investments-table"
+                           class="table table-striped table-bordered nowrap data-table">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -33,7 +42,9 @@
                                 <th>Actions</th>
                             </tr>
                         </thead>
+
                         <tbody></tbody>
+
                         <tfoot>
                             <tr>
                                 <th>#</th>
@@ -47,13 +58,19 @@
                             </tr>
                         </tfoot>
                     </table>
+
                 </div>
             </div>
         </div>
     </div>
+</div>
+<!-- [ Main Content ] end -->
+
 @endsection
 
 @section('scripts')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
     <!-- Include SweetAlert from CDN -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.all.min.js" aria-hidden="true"></script>
     <script>
