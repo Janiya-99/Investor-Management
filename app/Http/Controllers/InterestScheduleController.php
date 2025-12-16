@@ -188,11 +188,11 @@ class InterestScheduleController extends Controller
         try {
             $interestSchedule->delete();
 
-            return redirect()->route('interest-schedules.index')->with('success', 'Interest schedule deleted successfully.');
+            return response()->json(['message' => 'Interest schedule deleted successfully', 'status' => 'success'], 200);
         } catch (Throwable $th) {
             Log::error('Failed to delete interest schedule', ['schedule_id' => $interestSchedule->id, 'error' => $th->getMessage()]);
 
-            return redirect()->back()->with('error', 'Unable to delete interest schedule. Please try again.');
+            return response()->json(['message' => 'Unable to delete interest schedule. Please try again.', 'status' => 'error'], 500);
         }
     }
 

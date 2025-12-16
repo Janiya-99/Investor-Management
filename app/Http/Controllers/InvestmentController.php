@@ -191,11 +191,11 @@ class InvestmentController extends Controller
         try {
             $investment->delete();
 
-            return redirect()->route('investments.index')->with('success', 'Investment deleted successfully.');
+            return response()->json(['message' => 'Investment deleted successfully', 'status' => 'success'], 200);
         } catch (Throwable $th) {
             Log::error('Failed to delete investment', ['investment_id' => $investment->id, 'error' => $th->getMessage()]);
 
-            return redirect()->back()->with('error', 'Unable to delete investment. Please try again.');
+            return response()->json(['message' => 'Unable to delete investment. Please try again.', 'status' => 'error'], 500);
         }
     }
 }

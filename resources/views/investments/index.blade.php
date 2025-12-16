@@ -54,6 +54,8 @@
 @endsection
 
 @section('scripts')
+    <!-- Include SweetAlert from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.all.min.js" aria-hidden="true"></script>
     <script>
         $(document).ready(function() {
             var table = $('#investments-table').DataTable({
