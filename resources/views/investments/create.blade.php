@@ -98,6 +98,7 @@
                                     <option value="">Search product</option>
                                     @foreach ($products as $product)
                                         <option value="{{ $product->id }}"
+                                                @selected(old('product_id', $investment->product_id ?? '') == $product->id)
                                                 data-investment-amount="{{ $product->default_investment }}"
                                                 data-interest-rate="{{ $product->interest_rate }}"
                                                 data-period="{{ $product->period }}"
@@ -174,7 +175,7 @@
                             <div class="col-md-6 mb-3 form-group">
                                 <label class="form-label required">Start Date</label>
                                 <input type="date" name="start_date" class="form-control"
-                                       value="{{ old('start_date', $investment->start_date ?? date('Y-m-d')) }}" required>
+                                       value="{{ old('start_date', isset($investment) && $investment->start_date ? $investment->start_date->format('Y-m-d') : date('Y-m-d')) }}" required>
                             </div>
 
                             {{-- Status --}}
