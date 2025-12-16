@@ -48,6 +48,14 @@
 
   - Modified the logic to toggle dark and light modes when clicked on dark mode it stays on that after reload of the fresh page.
 
+- [x] **Controllers were protected with the constructor**
+
+  - Controllers were protected with the constructor to ensure that only authorized users can access them.
+
+- [x] **Kernel.php was updated with the middleware**
+
+  - Kernel.php was updated with the middleware to ensure that only authorized users can access the application.
+
 ---
 
 _Created by Amika | 2025-12-16_
