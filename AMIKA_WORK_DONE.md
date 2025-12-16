@@ -40,6 +40,10 @@
 
   - Implemented the view with DataTables operations.
 
+- [x] **Edited Interest Schedule View**
+
+  - Edited interest schedule view to use DataTables operations and categorize according to the Investor.
+
 ---
 
 _Created by Amika | 2025-12-16_
