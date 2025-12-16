@@ -73,6 +73,15 @@
                 responsive: true
             });
 
+            // Use ResizeObserver to ensure table columns adjust when container size changes
+            var tableContainer = document.querySelector('#investors-table_wrapper');
+            if (tableContainer) {
+                var resizeObserver = new ResizeObserver(function() {
+                    table.columns.adjust();
+                });
+                resizeObserver.observe(tableContainer);
+            }
+
             // Add event listener for opening and closing details
             $('#investors-table tbody').on('click', 'button.btn-details', function() {
                 var tr = $(this).closest('tr');
