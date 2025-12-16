@@ -74,6 +74,15 @@
                 scrollX: true,
                 responsive: true
             });
+
+            // Use ResizeObserver to ensure table columns adjust when container size changes
+            var tableContainer = document.querySelector('#basic-btn_wrapper');
+            if (tableContainer) {
+                var resizeObserver = new ResizeObserver(function() {
+                    table.columns.adjust();
+                });
+                resizeObserver.observe(tableContainer);
+            }
         });
     </script>
 @endsection
