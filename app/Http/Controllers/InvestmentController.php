@@ -13,6 +13,8 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 use Throwable;
 
 class InvestmentController extends Controller
@@ -20,17 +22,44 @@ class InvestmentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $investments = Investment::with(['investor', 'product', 'bankDetail'])
-                ->latest()
-                ->paginate(15);
+            if ($request->ajax()) {
+                $investments = Investment::with(['investor', 'product']);
 
-            return view('investments.index', compact('investments'));
+                return DataTables::of($investments)
+                    ->addIndexColumn()
+                    ->addColumn('investor_name', function ($row) {
+                        return $row->investor->full_name ?? 'N/A';
+                    })
+                    ->addColumn('product_name', function ($row) {
+                        return $row->product->name ?? 'N/A';
+                    })
+                    ->editColumn('investment_amount', function ($row) {
+                        return number_format($row->investment_amount, 2);
+                    })
+                    ->editColumn('interest_rate', function ($row) {
+                        return number_format($row->interest_rate, 4) . '%';
+                    })
+                    ->editColumn('start_date', function ($row) {
+                        return optional($row->start_date)->format('Y-m-d');
+                    })
+                    ->editColumn('status', function ($row) {
+                       return '<span class="badge bg-light text-uppercase text-dark">' . $row->status . '</span>';
+                    })
+                    ->addColumn('action', function ($row) {
+                        $editBtn = '<a href="' . route('investments.edit', $row->id) . '" class="btn btn-sm btn-outline-primary me-1">Edit</a>';
+                        $deleteBtn = '<button class="btn btn-sm btn-outline-danger" onclick="handleDelete(\'' . route('investments.destroy', $row->id) . '\', { _token: \'' . csrf_token() . '\' })">Delete</button>';
+                        return $editBtn . $deleteBtn;
+                    })
+                    ->rawColumns(['status', 'action'])
+                    ->make(true);
+            }
+
+            return view('investments.index');
         } catch (Throwable $th) {
             Log::error('Failed to load investments list', ['error' => $th->getMessage()]);
-
             return redirect()->back()->with('error', 'Unable to load investments right now. Please try again.');
         }
     }

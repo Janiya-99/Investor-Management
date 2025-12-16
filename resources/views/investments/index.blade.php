@@ -4,6 +4,13 @@
 @section('breadcrumb-item', 'Investments')
 @section('breadcrumb-item-active', 'List')
 
+@section('css')
+    <!-- [Page specific CSS] start -->
+    <link rel="stylesheet" href="{{ URL::asset('build/css/plugins/dataTables.bootstrap5.min.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('build/css/plugins/buttons.bootstrap5.min.css') }}">
+    <!-- [Page specific CSS] end -->
+@endsection
+
 @section('content')
     <div class="row">
         <div class="col-12">
@@ -13,7 +20,7 @@
                     <a href="{{ route('investments.create') }}" class="btn btn-primary">Add Investment</a>
                 </div>
                 <div class="card-body table-responsive">
-                    <table class="table table-striped align-middle">
+                    <table id="investments-table" class="table table-striped align-middle table-bordered nowrap">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -26,41 +33,34 @@
                                 <th class="text-end">Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @forelse ($investments as $investment)
-                                <tr>
-                                    <td>{{ $investment->id }}</td>
-                                    <td>{{ $investment->investor->full_name ?? 'N/A' }}</td>
-                                    <td>{{ $investment->product->name ?? 'N/A' }}</td>
-                                    <td>{{ number_format($investment->investment_amount, 2) }}</td>
-                                    <td>{{ number_format($investment->interest_rate, 4) }}</td>
-                                    <td>{{ optional($investment->start_date)->format('Y-m-d') }}</td>
-                                    <td>
-                                        <span class="badge bg-light text-uppercase text-dark">{{ $investment->status }}</span>
-                                    </td>
-                                    <td class="text-end">
-                                        <a href="{{ route('investments.edit', $investment) }}"
-                                            class="btn btn-sm btn-outline-primary">Edit</a>
-                                        <form action="{{ route('investments.destroy', $investment) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-outline-danger"
-                                                onclick="return confirm('Delete this investment?')">Delete</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="8" class="text-center text-muted">No investments found.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
+                        <tbody></tbody>
                     </table>
-                    <div class="mt-3">
-                        {{ $investments->links() }}
-                    </div>
                 </div>
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        $(document).ready(function() {
+            var table = $('#investments-table').DataTable({
+                dom: '<"top"lBf>rt<"bottom"ip><"clear">',
+                buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+                processing: true,
+                serverSide: true,
+                ajax: "{{ route('investments.index') }}",
+                columns: [
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                    { data: 'investor_name', name: 'investor.full_name' },
+                    { data: 'product_name', name: 'product.name' },
+                    { data: 'investment_amount', name: 'investment_amount' },
+                    { data: 'interest_rate', name: 'interest_rate' },
+                    { data: 'start_date', name: 'start_date' },
+                    { data: 'status', name: 'status' },
+                    { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-end' }
+                ]
+            });
+        });
+    </script>
 @endsection
