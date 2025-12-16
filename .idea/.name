@@ -1,0 +1,1 @@
+logs.blade.php
