@@ -268,16 +268,18 @@
 
 @if (env('APP_DARK_LAYOUT') == 'default')
     <script>
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            dark_layout = 'true';
-        } else {
-            dark_layout = 'false';
-        }
-        layout_change_default();
-        if (dark_layout == 'true') {
-            layout_change('dark');
-        } else {
-            layout_change('light');
+        if (!localStorage.getItem('theme-mode')) {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                dark_layout = 'true';
+            } else {
+                dark_layout = 'false';
+            }
+            layout_change_default();
+            if (dark_layout == 'true') {
+                layout_change('dark');
+            } else {
+                layout_change('light');
+            }
         }
     </script>
 @endif
@@ -285,15 +287,39 @@
 @if (env('APP_DARK_LAYOUT') != 'default')
     @if (env('APP_DARK_LAYOUT') == 'true')
         <script>
-            layout_change('dark');
+            if (!localStorage.getItem('theme-mode')) {
+                layout_change('dark');
+            }
         </script>
     @endif
     @if (env('APP_DARK_LAYOUT') == false)
         <script>
-            layout_change('light');
+            if (!localStorage.getItem('theme-mode')) {
+                layout_change('light');
+            }
         </script>
     @endif
 @endif
+
+<script>
+    // Persistence for Theme Mode
+    document.addEventListener('DOMContentLoaded', function() {
+        // Wrapper to save preference
+        if (typeof window.layout_change === 'function') {
+            var original_layout_change = window.layout_change;
+            window.layout_change = function(mode) {
+                original_layout_change(mode);
+                localStorage.setItem('theme-mode', mode);
+            };
+        }
+
+        // Apply saved preference
+        var savedMode = localStorage.getItem('theme-mode');
+        if (savedMode && typeof layout_change === 'function') {
+            layout_change(savedMode);
+        }
+    });
+</script>
 
 
 @if (env('APP_DARK_NAVBAR') == 'true')

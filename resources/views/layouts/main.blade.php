@@ -23,6 +23,12 @@
 
     <body data-pc-preset="preset-1" data-pc-sidebar-theme="dark" data-pc-sidebar-caption="true" data-pc-direction="ltr"
         data-pc-theme="light">
+        <script>
+            // Avoid flicker by setting theme immediately
+            if (localStorage.getItem('theme-mode') === 'dark') {
+                document.body.setAttribute('data-pc-theme', 'dark');
+            }
+        </script>
         @include('layouts.loader')
         @include('layouts.sidebar')
         @include('layouts.topbar')
