@@ -301,6 +301,21 @@
                 generateSchedule();
             }
 
+            // Listen for form reset event from footerjs
+            $(document).on('form:reset', function() {
+                $('#scheduleTable').html(`
+                        <tr>
+                            <td colspan="3" class="text-center text-muted p-4">
+                                Enter details to generate schedule
+                            </td>
+                        </tr>
+                    `);
+                $('#scheduleType').text('—');
+                // Also reset choices.js instances if any (the .js-choice-search elements)
+                // Choices.js doesn't auto-reset with form reset perfectly sometimes, but let's see.
+                // Assuming simple reset for now.
+            });
+
             $('#productSelect').on('change', function () {
                 const selectedValue = $(this).val();
                 // Find option by value explicitly to ensure we get the correct DOM element with data attributes

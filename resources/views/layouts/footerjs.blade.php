@@ -203,7 +203,15 @@
                         buttonsStyling: false,
                         showCloseButton: true
                     }).then(() => {
-                        location.reload();
+                        if (response.reload === false) {
+                            if (response.reset === true) {
+                                $('#submitForm')[0].reset();
+                                $(document).trigger('form:reset');
+                            }
+                            $btn.prop('disabled', false).html(originalText);
+                        } else {
+                            location.reload();
+                        }
                     });
                 }
 

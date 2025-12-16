@@ -90,7 +90,9 @@ class InvestmentController extends Controller
             return response()->json([
                 'message' => 'Investment created successfully.',
                 'status' => 'success',
-                'next_path' => route('investments.index')
+                'next_path' => route('investments.index'),
+                'reload' => false,
+                'reset' => true
             ], 201);
 
         } catch (Exception $th) {
