@@ -68,7 +68,9 @@
                     { data: 'total_schedules_count', name: 'total_schedules_count', searchable: false },
                     { data: 'total_pending_amount', name: 'total_pending_amount', searchable: false },
                     { data: 'action', name: 'action', orderable: false, searchable: false }
-                ]
+                ],
+                scrollX: true,
+                responsive: true
             });
 
             // Add event listener for opening and closing details
