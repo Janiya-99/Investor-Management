@@ -28,7 +28,7 @@
             <div class="card-body">
                 <div class="dt-responsive table-responsive">
 
-                    <table id="investments-table"
+                    <table id="basic-btn"
                            class="table table-striped table-bordered nowrap data-table">
                         <thead>
                             <tr>
@@ -75,7 +75,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.all.min.js" aria-hidden="true"></script>
     <script>
         $(document).ready(function() {
-            var table = $('#investments-table').DataTable({
+            var table = $('#basic-btn').DataTable({
                 dom: '<"top"lBf>rt<"bottom"ip><"clear">',
                 buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
                 processing: true,
@@ -90,7 +90,9 @@
                     { data: 'start_date', name: 'start_date' },
                     { data: 'status', name: 'status' },
                     { data: 'action', name: 'action', orderable: false, searchable: false }
-                ]
+                ],
+                scrollX: true,
+                responsive: true
             });
         });
     </script>

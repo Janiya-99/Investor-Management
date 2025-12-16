@@ -18,32 +18,34 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Investment Logs</h5>
                 </div>
-                <div class="card-body table-responsive">
-                    <table id="logs-table" class="table table-striped align-middle table-bordered nowrap">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Investment</th>
-                                <th>Investor</th>
-                                <th>Type</th>
-                                <th>Amount</th>
-                                <th>Date</th>
-                                <th>Description</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                        <tfoot>
-                            <tr>
-                                <th>#</th>
-                                <th>Investment</th>
-                                <th>Investor</th>
-                                <th>Type</th>
-                                <th>Amount</th>
-                                <th>Date</th>
-                                <th>Description</th>
-                            </tr>
-                        </tfoot>
-                    </table>
+                <div class="card-body">
+                    <div class="dt-responsive table-responsive">
+                        <table id="basic-btn" class="table table-striped align-middle table-bordered nowrap data-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Investment</th>
+                                    <th>Investor</th>
+                                    <th>Type</th>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Investment</th>
+                                    <th>Investor</th>
+                                    <th>Type</th>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -53,7 +55,7 @@
 @section('scripts')
     <script>
         $(document).ready(function() {
-            var table = $('#logs-table').DataTable({
+            var table = $('#basic-btn').DataTable({
                 dom: '<"top"lBf>rt<"bottom"ip><"clear">',
                 buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
                 processing: true,
@@ -68,7 +70,9 @@
                     { data: 'log_date', name: 'log_date' },
                     { data: 'description', name: 'description' }
                 ],
-                order: [[5, 'desc']] // Sort by Date desc by default
+                order: [[5, 'desc']], // Sort by Date desc by default
+                scrollX: true,
+                responsive: true
             });
         });
     </script>
